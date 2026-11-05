@@ -3,9 +3,9 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 1 — project foundation, relational schema, and seed data.**
-Product discovery, artisan pages, provenance verification, commerce, custom
-orders, and moderation UI arrive in later chunks.
+**Current build: Chunk 2 — catalogue discovery and product detail.**
+Artisan pages, provenance verification, commerce, custom orders, and moderation
+UI arrive in later chunks.
 
 ## Stack
 
@@ -13,6 +13,21 @@ orders, and moderation UI arrive in later chunks.
 - Tailwind CSS v4 + shadcn/ui conventions + Lucide icons
 - Supabase Postgres, Auth, and Row Level Security
 - `@supabase/ssr` with Next.js Proxy session refresh
+
+## What is in Chunk 2
+
+- `/products` catalogue grid with URL-driven, server-rendered filters for craft
+  tradition, region, material, occasion, and price.
+- Deterministic sorting, active-filter chips, result counts, and pagination
+  (12 pieces per page) built from plain GET links and forms.
+- `/products/[slug]` product detail pages with a gallery, maker details, craft
+  story, six-stage journey timeline, certificate record, and related pieces.
+- A cookie-free public Supabase client for cached catalogue reads, using
+  `'use cache'` + `cacheLife` under Next.js Cache Components.
+- Shared site header/footer, product cards, ratings, filters, loading states,
+  and a custom not-found page.
+- A refreshed home page with live catalogue stats, featured pieces, craft
+  traditions, provenance promises, and the six-stage journey overview.
 
 ## What is in Chunk 1
 
@@ -95,8 +110,18 @@ other invariants. It is a test harness only; the app always uses Supabase.
 npm run dev
 ```
 
-Open `http://localhost:3000`. The foundation page does not require Supabase to
-render, but authenticated and catalogue features in later chunks do.
+Open `http://localhost:3000`. The catalogue is server-rendered and reads from
+Supabase, so `.env.local` must point at a project with the migrations and seed
+applied. Public pages remain readable through the anon/publishable key; no
+service-role key is needed for browsing.
+
+Key routes:
+
+| Route | Purpose |
+| --- | --- |
+| `/` | Home, live catalogue stats, featured pieces, craft traditions |
+| `/products` | Catalogue grid with facets, sorting, and pagination |
+| `/products/[slug]` | Product detail, craft story, journey, artisan, certificate |
 
 ## Demo accounts
 

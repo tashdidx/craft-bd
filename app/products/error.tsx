@@ -21,9 +21,13 @@ export default function ProductsError({
       </span>
       <h1 className="mt-5 text-3xl">The catalogue could not load</h1>
       <p className="mt-3 max-w-lg text-sm leading-6 text-muted-foreground">
-        {error.message ||
-          "A connection to the catalogue failed. Try loading the pieces again."}
+        The catalogue service did not respond. Try loading the pieces again.
       </p>
+      {error.digest ? (
+        <p className="mt-2 font-mono text-[11px] text-muted-foreground">
+          Reference: {error.digest}
+        </p>
+      ) : null}
       <Button onClick={reset} className="mt-6">
         Try again
       </Button>

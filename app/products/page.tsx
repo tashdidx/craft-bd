@@ -57,10 +57,12 @@ async function CatalogueContent({ searchParams }: ProductsPageProps) {
     getCatalogueFacets(),
     getCatalogueProducts(filters),
   ]);
+  const firstResult = (result.page - 1) * result.pageSize + 1;
+  const lastResult = Math.min(result.page * result.pageSize, result.total);
 
   return (
     <div className="grid gap-10 pt-10 lg:grid-cols-[280px_minmax(0,1fr)] lg:gap-12">
-      <aside className="lg:sticky lg:top-24 lg:self-start">
+      <aside className="lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:self-start lg:overflow-y-auto lg:overscroll-contain lg:pr-2">
         <FilterPanel facets={facets} filters={filters} />
       </aside>
 
@@ -74,7 +76,9 @@ async function CatalogueContent({ searchParams }: ProductsPageProps) {
             {result.total > 0 ? (
               <span className="hidden sm:inline">
                 {" "}
-                · page {result.page} of {result.pageCount}
+                · showing {formatNumber(firstResult)}–
+                {formatNumber(lastResult)} · page {result.page} of{" "}
+                {result.pageCount}
               </span>
             ) : null}
           </p>

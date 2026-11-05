@@ -1,159 +1,377 @@
-import { Database, MapPin, Package, ShieldCheck } from "lucide-react";
-import { SITE } from "@/lib/constants";
+import Image from "next/image";
+import Link from "next/link";
+import { Suspense } from "react";
+import {
+  ArrowRight,
+  BadgeCheck,
+  BookOpen,
+  Hammer,
+  MapPin,
+  ScrollText,
+  ShieldCheck,
+} from "lucide-react";
+import { ProductCard } from "@/components/product-card";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { JOURNEY_STAGES, SITE } from "@/lib/constants";
+import { getCatalogueFacets, getFeaturedProducts } from "@/lib/data/catalogue";
+import { formatNumber } from "@/lib/format";
 
-const foundations = [
+const promises = [
   {
-    icon: Database,
-    title: "18 relational tables",
-    detail: "Accounts, catalogue, stories, provenance, commerce, and moderation.",
+    icon: Hammer,
+    title: "A named maker",
+    detail:
+      "Every listing belongs to an artisan studio with a district, a craft specialisation, and years at the work.",
   },
   {
-    icon: MapPin,
-    title: "9 artisan studios",
-    detail: "Narayanganj, Dhamrai, Jamalpur, Faridpur, Sylhet, and Rajshahi.",
+    icon: BookOpen,
+    title: "The story held",
+    detail:
+      "Origin, history, traditional use, materials, and cultural meaning are recorded alongside the product.",
   },
   {
-    icon: Package,
-    title: "16 seeded products",
-    detail: "Across eight craft traditions, with materials, stock, and pricing.",
+    icon: ScrollText,
+    title: "The process shown",
+    detail:
+      "Six stages — from raw material to final piece — with the maker's own duration estimates.",
   },
   {
     icon: ShieldCheck,
-    title: "RLS on every table",
-    detail: "Public catalogue reads, owner-scoped writes, and JWT-based admin access.",
+    title: "Provenance recorded",
+    detail:
+      "A certificate is issued with the piece, carrying a hash computed from its recorded payload.",
   },
 ] as const;
 
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <header className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-6 py-6">
-        <div className="flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-full bg-primary font-display text-xl text-primary-foreground">
-            C
-          </span>
-          <div>
-            <p className="font-display text-xl leading-none">{SITE.name}</p>
-            <p className="mt-1 text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
-              Bangladeshi handicrafts
-            </p>
-          </div>
-        </div>
-        <span className="rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-muted-foreground">
-          Foundation · Chunk 1
-        </span>
-      </header>
-
-      <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-16 px-6 pb-20 pt-8 sm:pt-14">
-        <section className="grid items-end gap-10 lg:grid-cols-[1.25fr_0.75fr]">
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(154,63,36,0.10),transparent_45%),radial-gradient(circle_at_85%_25%,rgba(39,64,96,0.10),transparent_40%)]" />
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-primary">
               A marketplace with memory
             </p>
-            <h1 className="mt-5 max-w-3xl text-5xl leading-[1.05] sm:text-6xl lg:text-7xl">
+            <h1 className="mt-5 max-w-3xl text-5xl leading-[1.03] sm:text-6xl lg:text-7xl">
               Handmade in Bangladesh, carried with its story.
             </h1>
             <p className="mt-7 max-w-2xl text-lg leading-8 text-muted-foreground">
               {SITE.description}
             </p>
-            <p className="mt-6 max-w-2xl rounded-2xl border border-border bg-card/70 px-5 py-4 text-sm leading-6 text-muted-foreground">
-              This build establishes the data foundation only. Product discovery,
-              artisan pages, verification, cart, custom orders, and reviews arrive
-              in the next chunks.
-            </p>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button asChild size="lg">
+                <Link href="/products">
+                  Browse the catalogue
+                  <ArrowRight aria-hidden="true" className="size-4" />
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline">
+                <Link href="/#our-promise">How provenance works</Link>
+              </Button>
+            </div>
+
+            <Suspense fallback={<CatalogueStatsSkeleton />}>
+              <CatalogueStats />
+            </Suspense>
           </div>
 
-          <aside className="rounded-[2rem] border border-border bg-card p-7 shadow-[0_24px_80px_-48px_rgba(43,33,25,0.45)]">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">
-              Foundation status
-            </p>
-            <dl className="mt-5 space-y-4">
-              <div className="flex items-baseline justify-between gap-4 border-b border-border pb-4">
-                <dt className="text-sm text-muted-foreground">Schema</dt>
-                <dd className="font-display text-2xl">Complete</dd>
+          <aside className="relative hidden lg:block">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border bg-secondary">
+              <Image
+                src="/crafts/jamdani.svg"
+                alt="Lotus and river motifs from the jamdani weaving tradition"
+                fill
+                preload
+                sizes="(min-width: 1024px) 38vw, 100vw"
+                className="object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-6 -left-8 w-64 rounded-2xl border border-border bg-card p-5 shadow-[0_24px_80px_-40px_rgba(43,33,25,0.5)]">
+              <div className="flex items-center gap-2 text-primary">
+                <BadgeCheck
+                  aria-hidden="true"
+                  className="size-5"
+                  strokeWidth={1.7}
+                />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em]">
+                  Provenance trail
+                </p>
               </div>
-              <div className="flex items-baseline justify-between gap-4 border-b border-border pb-4">
-                <dt className="text-sm text-muted-foreground">RLS policies</dt>
-                <dd className="font-display text-2xl">Enabled</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-4 border-b border-border pb-4">
-                <dt className="text-sm text-muted-foreground">Seed data</dt>
-                <dd className="font-display text-2xl">Loaded</dd>
-              </div>
-              <div className="flex items-baseline justify-between gap-4">
-                <dt className="text-sm text-muted-foreground">Backend</dt>
-                <dd className="font-display text-2xl">Supabase</dd>
-              </div>
-            </dl>
-            <p className="mt-6 text-xs leading-5 text-muted-foreground">
-              Run <code className="rounded bg-muted px-1.5 py-0.5">npm run db:verify</code>{" "}
-              to replay the migrations and seed against a throwaway Postgres.
-            </p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Maker, origin, material story, six-stage journey, and a
+                certificate code — attached to every published piece.
+              </p>
+            </div>
           </aside>
-        </section>
+        </div>
+      </section>
 
-        <section aria-labelledby="foundation-heading">
+      <Suspense fallback={<FeaturedPiecesSkeleton />}>
+        <FeaturedPieces />
+      </Suspense>
+
+      <section
+        id="craft-traditions"
+        className="mx-auto w-full max-w-6xl scroll-mt-24 px-5 pt-20 sm:px-6"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+              Living craft traditions
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
+              Start with a craft, not a category.
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-6 text-muted-foreground">
+            Jamdani weaving, clay pottery, jute, nakshi kantha, brass, bamboo,
+            woodcraft, and shital pati — each with its own geography and
+            vocabulary.
+          </p>
+        </div>
+
+        <Suspense fallback={<TraditionsSkeleton />}>
+          <CraftTraditions />
+        </Suspense>
+      </section>
+
+      <section
+        id="our-promise"
+        className="mx-auto w-full max-w-6xl scroll-mt-24 px-5 pt-20 sm:px-6"
+      >
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+              Our promise
+            </p>
+            <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
+              Context is part of the product.
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-6 text-muted-foreground">
+            The catalogue is modelled so that a piece cannot lose its maker,
+            origin, or process when it changes hands.
+          </p>
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {promises.map(({ icon: Icon, title, detail }) => (
+            <article
+              key={title}
+              className="rounded-3xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
+            >
+              <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
+                <Icon aria-hidden="true" className="size-5" strokeWidth={1.6} />
+              </span>
+              <h3 className="mt-5 text-lg leading-snug">{title}</h3>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                {detail}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section
+        id="craft-journey"
+        className="mx-auto mt-20 w-full max-w-6xl scroll-mt-24 px-5 sm:px-6"
+      >
+        <div className="overflow-hidden rounded-[2rem] bg-accent px-7 py-10 text-accent-foreground sm:px-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
-                What is ready
+              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-foreground/60">
+                The craft journey
               </p>
-              <h2 id="foundation-heading" className="mt-3 text-3xl sm:text-4xl">
-                A catalogue built to hold context.
+              <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
+                Six stages, recorded for every piece.
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-6 text-muted-foreground">
-              Every product can carry its maker, origin, material story, six-stage
-              making process, and a tamper-evident certificate.
+            <p className="max-w-md text-sm leading-6 text-accent-foreground/70">
+              Material sourcing, design, making, finishing, quality check, and
+              the final product. Each stage carries its own note and duration.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {foundations.map(({ icon: Icon, title, detail }) => (
-              <article
-                key={title}
-                className="rounded-3xl border border-border bg-card p-6 transition-colors hover:border-primary/40"
+          <ol className="mt-9 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+            {JOURNEY_STAGES.map((stage, index) => (
+              <li
+                key={stage.stage}
+                className="rounded-2xl border border-accent-foreground/15 p-4"
               >
-                <span className="grid size-10 place-items-center rounded-full bg-secondary text-secondary-foreground">
-                  <Icon aria-hidden="true" className="size-5" strokeWidth={1.6} />
+                <span className="font-mono text-[11px] text-accent-foreground/50">
+                  {String(index + 1).padStart(2, "0")}
                 </span>
-                <h3 className="mt-5 text-lg leading-snug">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  {detail}
+                <p className="mt-2 text-sm font-semibold leading-snug">
+                  {stage.label}
                 </p>
-              </article>
+                <p className="mt-1.5 text-xs leading-5 text-accent-foreground/60">
+                  {stage.description}
+                </p>
+              </li>
             ))}
-          </div>
-        </section>
-
-        <section className="overflow-hidden rounded-[2rem] bg-accent px-7 py-10 text-accent-foreground sm:px-10">
-          <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-end">
-            <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-foreground/60">
-                Next chunk
-              </p>
-              <h2 className="mt-4 max-w-2xl text-3xl leading-tight sm:text-4xl">
-                Product discovery, filters, and the story behind every piece.
-              </h2>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-accent-foreground/70">
-                Chunk 2 adds the catalogue grid, faceted search by price, region,
-                and material, the product detail page, craft stories, and the
-                six-stage craft journey timeline.
-              </p>
-            </div>
-            <div className="rounded-2xl border border-accent-foreground/15 px-5 py-4 text-sm text-accent-foreground/75">
-              Awaiting review of Chunk 1
-            </div>
-          </div>
-        </section>
-      </main>
-
-      <footer className="border-t border-border">
-        <div className="mx-auto flex w-full max-w-6xl flex-col gap-3 px-6 py-7 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <p>{SITE.name} · Dhaka, Bangladesh</p>
-          <p>Seed names and reviews are fictional; the craft traditions are real.</p>
+          </ol>
         </div>
-      </footer>
+      </section>
+
+      <section className="mx-auto mt-20 w-full max-w-6xl px-5 pb-20 sm:px-6">
+        <div className="flex flex-wrap items-center justify-between gap-6 rounded-[2rem] border border-border bg-card px-7 py-8 sm:px-10">
+          <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+              The full catalogue
+            </p>
+            <h2 className="mt-3 max-w-xl text-2xl leading-tight sm:text-3xl">
+              Find a piece by place, material, or the occasion you are marking.
+            </h2>
+          </div>
+          <Button asChild size="lg">
+            <Link href="/products">
+              Explore every piece
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+async function CatalogueStats() {
+  const facets = await getCatalogueFacets();
+  const stats = [
+    { label: "published pieces", value: facets.total },
+    { label: "artisan studios", value: facets.artisanCount },
+    {
+      label: "craft traditions",
+      value: facets.categories.filter((category) => category.count > 0).length,
+    },
+  ];
+
+  return (
+    <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6">
+      {stats.map((stat) => (
+        <div key={stat.label}>
+          <dt className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            {stat.label}
+          </dt>
+          <dd className="mt-1 font-display text-3xl leading-none">
+            {formatNumber(stat.value)}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+async function FeaturedPieces() {
+  const products = await getFeaturedProducts(4);
+
+  if (products.length === 0) return null;
+
+  return (
+    <section className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+            Featured pieces
+          </p>
+          <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
+            A first look at the catalogue.
+          </h2>
+        </div>
+        <Link
+          href="/products?sort=newest"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
+          See new arrivals
+          <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+      </div>
+
+      <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {products.map((product) => (
+          <ProductCard key={product.id} product={product} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+async function CraftTraditions() {
+  const facets = await getCatalogueFacets();
+  const categories = facets.categories.filter((category) => category.count > 0);
+
+  return (
+    <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {categories.map((category, index) => (
+        <Link
+          key={category.id}
+          href={`/products?category=${category.slug}`}
+          className="group flex items-start justify-between gap-4 rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
+        >
+          <div>
+            <span className="font-mono text-[11px] text-muted-foreground">
+              {String(index + 1).padStart(2, "0")}
+            </span>
+            <p className="mt-2 text-lg leading-snug transition-colors group-hover:text-primary">
+              {category.name}
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {category.count} {category.count === 1 ? "piece" : "pieces"}
+            </p>
+          </div>
+          <MapPin
+            aria-hidden="true"
+            className="mt-1 size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary"
+            strokeWidth={1.6}
+          />
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function CatalogueStatsSkeleton() {
+  return (
+    <div className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6">
+      {Array.from({ length: 3 }, (_, index) => (
+        <div key={index}>
+          <Skeleton className="h-2.5 w-20" />
+          <Skeleton className="mt-2 h-8 w-12" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function FeaturedPiecesSkeleton() {
+  return (
+    <section className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-6">
+      <Skeleton className="h-3 w-32" />
+      <Skeleton className="mt-4 h-9 w-80 max-w-full" />
+      <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index}>
+            <Skeleton className="aspect-[4/5] w-full rounded-3xl" />
+            <Skeleton className="mt-4 h-3 w-24" />
+            <Skeleton className="mt-3 h-5 w-4/5" />
+            <Skeleton className="mt-2 h-3 w-1/2" />
+            <Skeleton className="mt-4 h-4 w-28" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function TraditionsSkeleton() {
+  return (
+    <div className="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {Array.from({ length: 8 }, (_, index) => (
+        <Skeleton key={index} className="h-[118px] rounded-2xl" />
+      ))}
     </div>
   );
 }

@@ -13,7 +13,7 @@
   <g transform="translate(400 380) scale(1.35)">
       <path d="M-86 -104 q86 44 172 0 l-14 42 q-14 26 -16 52 q-4 76 -56 106 q-52 -30 -56 -106 q-2 -26 -16 -52 Z"
         fill="#f5e6cf" opacity=".92"/>
-      <path d="M-60 -50 q60 28 120 0" fill="none" stroke="#f5e6cf" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke="#e0b06a" opacity=".9"/>
+      <path d="M-60 -50 q60 28 120 0" fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" stroke="#e0b06a" opacity=".9"/>
       <path d="M-74 22 q74 34 148 0" fill="none" stroke="#f5e6cf" stroke-width="2.5" stroke-linecap="round" opacity=".7"/>
       <path d="M-58 86 q58 28 116 0" fill="none" stroke="#f5e6cf" stroke-width="2.5" stroke-linecap="round" opacity=".55"/>
       <path d="M-104 -140 q104 36 208 0" fill="none" stroke="#f5e6cf" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>

@@ -256,13 +256,52 @@ export async function getCatalogueProducts(
     categoryIds = (data ?? []).map((category) => category.id);
 
     if (categoryIds.length === 0) {
-      return emptyResult(filters.page);
+      return emptyResult(1);
     }
   }
 
+  // Count first so an out-of-range ?page= can be clamped to the last real
+  // page. PostgREST rejects ranges past the end with a 416 error.
+  let countQuery = supabase
+    .from("products")
+    .select("id", { count: "exact", head: true })
+    .eq("status", "published");
+
+  if (categoryIds) countQuery = countQuery.in("category_id", categoryIds);
+  if (filters.regions.length > 0) {
+    countQuery = countQuery.in("region", filters.regions);
+  }
+  if (filters.materials.length > 0) {
+    countQuery = countQuery.overlaps("materials", filters.materials);
+  }
+  if (filters.occasions.length > 0) {
+    countQuery = countQuery.overlaps("occasion_tags", filters.occasions);
+  }
+  if (filters.minPrice !== undefined) {
+    countQuery = countQuery.gte("price_bdt", filters.minPrice);
+  }
+  if (filters.maxPrice !== undefined) {
+    countQuery = countQuery.lte("price_bdt", filters.maxPrice);
+  }
+
+  const { count, error: countError } = await countQuery;
+
+  if (countError) {
+    throw new Error(`Could not count the catalogue: ${countError.message}`);
+  }
+
+  const total = count ?? 0;
+
+  if (total === 0) {
+    return emptyResult(1);
+  }
+
+  const pageCount = Math.max(1, Math.ceil(total / CATALOGUE_PAGE_SIZE));
+  const page = Math.min(filters.page, pageCount);
+
   let query = supabase
     .from("products")
-    .select(PRODUCT_CARD_COLUMNS, { count: "exact" })
+    .select(PRODUCT_CARD_COLUMNS)
     .eq("status", "published");
 
   if (categoryIds) query = query.in("category_id", categoryIds);
@@ -307,22 +346,21 @@ export async function getCatalogueProducts(
       break;
   }
 
-  const from = (filters.page - 1) * CATALOGUE_PAGE_SIZE;
+  const from = (page - 1) * CATALOGUE_PAGE_SIZE;
   const to = from + CATALOGUE_PAGE_SIZE - 1;
-  const { data, error, count } = await query.range(from, to);
+  const { data, error } = await query.range(from, to);
 
   if (error) {
     throw new Error(`Could not load the catalogue: ${error.message}`);
   }
 
-  const total = count ?? 0;
   const rows = (data ?? []) as unknown as RawCardRow[];
 
   return {
     items: rows.map(mapCard),
     total,
-    page: filters.page,
-    pageCount: Math.max(1, Math.ceil(total / CATALOGUE_PAGE_SIZE)),
+    page,
+    pageCount,
     pageSize: CATALOGUE_PAGE_SIZE,
   };
 }
