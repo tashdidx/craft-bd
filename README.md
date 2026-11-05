@@ -3,9 +3,9 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 2 — catalogue discovery and product detail.**
-Artisan pages, provenance verification, commerce, custom orders, and moderation
-UI arrive in later chunks.
+**Current build: Chunk 3 — authentication and customer accounts.**
+Commerce, reviews UI, admin tools, artisan dashboards, and provenance
+verification arrive in later chunks.
 
 ## Stack
 
@@ -13,6 +13,28 @@ UI arrive in later chunks.
 - Tailwind CSS v4 + shadcn/ui conventions + Lucide icons
 - Supabase Postgres, Auth, and Row Level Security
 - `@supabase/ssr` with Next.js Proxy session refresh
+
+## What is in Chunk 3
+
+- Email/password sign-up, sign-in, and sign-out through Supabase Auth. Craft BD
+  never stores or handles credentials itself.
+- `/account`, a protected dashboard that shows the signed-in profile, role, and
+  membership date.
+- Profile editing for full name and phone number, with the email shown
+  read-only until a dedicated email-change flow exists.
+- Password change from the account page, plus a single-use
+  forgot/reset-password flow delivered by email.
+- `/auth/callback` exchanges Supabase email links for a cookie session and
+  returns the visitor to a validated same-origin path.
+- An auth-aware header account menu, optimistic `/account` protection in the
+  Next.js Proxy, and authoritative JWT checks in every protected page and
+  Server Action.
+- Server-side Zod validation, accessible field errors, pending states, and
+  rate-limit messaging for every auth form.
+
+> Email confirmation follows the Supabase project setting. When it is enabled,
+> new accounts see a "check your inbox" message and can sign in after confirming;
+> seeded demo accounts are already confirmed.
 
 ## What is in Chunk 2
 
@@ -122,6 +144,12 @@ Key routes:
 | `/` | Home, live catalogue stats, featured pieces, craft traditions |
 | `/products` | Catalogue grid with facets, sorting, and pagination |
 | `/products/[slug]` | Product detail, craft story, journey, artisan, certificate |
+| `/login` | Email/password sign-in |
+| `/signup` | Create an account |
+| `/forgot-password` | Request a password reset link |
+| `/reset-password` | Choose a new password from a valid reset session |
+| `/account` | Protected profile, password, and session management |
+| `/auth/callback` | Handle Supabase email confirmation and recovery links |
 
 ## Demo accounts
 

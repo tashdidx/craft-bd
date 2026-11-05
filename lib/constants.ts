@@ -3,6 +3,7 @@ import type {
   CustomOrderStatus,
   OrderStatus,
   ReviewStatus,
+  UserRole,
 } from "@/lib/supabase/enums";
 
 export const SITE = {
@@ -30,6 +31,12 @@ export const DIVISIONS: ReadonlyArray<{
 export const DIVISION_LABELS: Record<BdDivision, string> = Object.fromEntries(
   DIVISIONS.map((division) => [division.value, division.label]),
 ) as Record<BdDivision, string>;
+
+export const ROLE_LABELS: Record<UserRole, string> = {
+  customer: "Customer",
+  artisan: "Artisan",
+  admin: "Administrator",
+};
 
 export const JOURNEY_STAGES = [
   {

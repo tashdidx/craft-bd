@@ -1,5 +1,10 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
+import {
+  AccountMenu,
+  AccountMenuSkeleton,
+} from "@/components/account/account-menu";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
 
@@ -47,6 +52,9 @@ export function SiteHeader() {
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
+          <Suspense fallback={<AccountMenuSkeleton />}>
+            <AccountMenu />
+          </Suspense>
         </nav>
       </div>
     </header>
