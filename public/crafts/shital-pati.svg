@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Shital Pati">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#264a3b"/>
+      <stop offset="1" stop-color="#3f6b53"/>
+    </linearGradient>
+    <pattern id="weave" width="42" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 21 H42" stroke="#f0ead7" stroke-width="1.2" opacity=".1"/>
+      <path d="M21 0 V42" stroke="#f0ead7" stroke-width="1.2" opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect width="800" height="1000" fill="url(#weave)"/>
+  <rect x="26" y="26" width="748" height="948" fill="none" stroke="#f0ead7" stroke-width="1.5" opacity=".35"/>
+  <g transform="translate(400 380) scale(1.05)">
+      <g fill="none" stroke="#f0ead7" stroke-width="2.5" stroke-linecap="round" opacity=".55">
+        <path d="M-180 -140 l180 -34 l180 34"/><path d="M-180 -100 l180 -34 l180 34"/><path d="M-180 -60 l180 -34 l180 34"/><path d="M-180 -20 l180 -34 l180 34"/><path d="M-180 20 l180 -34 l180 34"/><path d="M-180 60 l180 -34 l180 34"/><path d="M-180 100 l180 -34 l180 34"/><path d="M-180 140 l180 -34 l180 34"/>
+      </g>
+      <g fill="#f0ead7" opacity=".94">
+        <path d="M-150 60 l150 -70 l150 70 v46 l-150 -70 l-150 70Z"/>
+        <path d="M-150 132 l150 -70 l150 70 v46 l-150 -70 l-150 70Z"/>
+      </g>
+      <g fill="#bcae74" opacity=".8">
+        <path d="M-150 -26 l150 70 l150 -70 v40 l-150 70 l-150 -70Z"/>
+      </g>
+      <rect x="-164" y="-164" width="328" height="328" rx="10" fill="none" stroke="#f0ead7" stroke-width="2.5" stroke-linecap="round" opacity=".7"/></g>
+  <text x="400" y="812" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" letter-spacing="7" fill="#f0ead7">SHITAL</text>
+  <text x="400" y="878" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" letter-spacing="7" fill="#f0ead7">PATI</text>
+  <path d="M320 908 H480" stroke="#bcae74" stroke-width="2"/>
+  <text x="400" y="948" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" letter-spacing="5" fill="#f0ead7" opacity=".72">CRAFT BD · BANGLADESH</text>
+</svg>

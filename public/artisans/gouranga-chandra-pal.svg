@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" role="img" aria-label="Gouranga Chandra Pal">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7a3b22"/>
+      <stop offset="1" stop-color="#b86a3d"/>
+    </linearGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#f4ead8" opacity=".18"/>
+    </pattern>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <rect width="600" height="600" fill="url(#dots)"/>
+  <circle cx="300" cy="254" r="142" fill="#f4ead8" opacity=".95"/>
+  <text x="300" y="292" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="104" fill="#7a3b22">GP</text>
+  <text x="300" y="470" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="30" fill="#f4ead8">Gouranga Chandra Pal</text>
+  <text x="300" y="506" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" letter-spacing="3" fill="#f4ead8" opacity=".75">POTTER · DHAMRAI</text>
+  <path d="M230 536 H370" stroke="#f4ead8" stroke-width="2" opacity=".5"/>
+</svg>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Jamdani Weaving material detail">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#31456b"/>
+      <stop offset="1" stop-color="#18233d"/>
+    </linearGradient>
+    <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <path d="M0 13 H26" stroke="#f1e4ce" stroke-width="1" opacity=".14"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#grid)"/>
+  <g transform="translate(400 380) scale(1.35)">
+      <g fill="none" stroke="#f1e4ce" stroke-width="2.5" stroke-linecap="round" opacity=".55">
+        <circle cx="0" cy="0" r="150" stroke-dasharray="2 12"/>
+        <circle cx="0" cy="0" r="112" stroke-dasharray="2 9"/>
+      </g>
+      <g fill="#f1e4ce" opacity=".95">
+        <ellipse cx="0" cy="-58" rx="30" ry="86"/>
+        <ellipse cx="-58" cy="-24" rx="28" ry="78" transform="rotate(-38 -58 -24)"/>
+        <ellipse cx="58" cy="-24" rx="28" ry="78" transform="rotate(38 58 -24)"/>
+        <ellipse cx="-94" cy="28" rx="24" ry="62" transform="rotate(-72 -94 28)"/>
+        <ellipse cx="94" cy="28" rx="24" ry="62" transform="rotate(72 94 28)"/>
+      </g>
+      <circle cx="0" cy="18" r="27" fill="#c0603c"/>
+      <path d="M-150 150 Q0 220 150 150" fill="none" stroke="#f1e4ce" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M-150 174 Q0 244 150 174" fill="none" stroke="#f1e4ce" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+      <g fill="none" stroke="#f1e4ce" stroke-width="2.5" stroke-linecap="round" opacity=".8">
+        <path d="M-18 96 q18 -22 36 0 q-18 22 -36 0Z"/>
+        <path d="M0 96 v58"/>
+      </g></g>
+  <rect x="24" y="24" width="752" height="752" fill="none" stroke="#f1e4ce" stroke-width="1.5" opacity=".4"/>
+  <text x="60" y="720" font-family="Arial, sans-serif" font-size="14" letter-spacing="5" fill="#f1e4ce" opacity=".75">MATERIAL STUDY</text>
+  <text x="740" y="720" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#f1e4ce">Jamdani Weaving</text>
+  <text x="60" y="750" font-family="Arial, sans-serif" font-size="12" letter-spacing="4" fill="#f1e4ce" opacity=".55">CRAFT BD · HANDMADE IN BANGLADESH</text>
+</svg>

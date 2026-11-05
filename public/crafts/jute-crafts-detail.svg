@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" role="img" aria-label="Jute Crafts material detail">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#a98a45"/>
+      <stop offset="1" stop-color="#6f6231"/>
+    </linearGradient>
+    <pattern id="grid" width="26" height="26" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <path d="M0 13 H26" stroke="#f4e8c8" stroke-width="1" opacity=".14"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="800" fill="url(#bg)"/>
+  <rect width="800" height="800" fill="url(#grid)"/>
+  <g transform="translate(400 380) scale(1.35)">
+      <g fill="none" stroke="#f4e8c8" stroke-width="2.5" stroke-linecap="round" opacity=".5">
+        <path d="M-165 -150 H165"/><path d="M-165 -120 H165"/><path d="M-165 -90 H165"/><path d="M-165 -60 H165"/><path d="M-165 -30 H165"/><path d="M-165 0 H165"/><path d="M-165 30 H165"/><path d="M-165 60 H165"/><path d="M-165 90 H165"/><path d="M-165 120 H165"/><path d="M-165 150 H165"/>
+        <path d="M-150 -165 V165"/><path d="M-120 -165 V165"/><path d="M-90 -165 V165"/><path d="M-60 -165 V165"/><path d="M-30 -165 V165"/><path d="M0 -165 V165"/><path d="M30 -165 V165"/><path d="M60 -165 V165"/><path d="M90 -165 V165"/><path d="M120 -165 V165"/><path d="M150 -165 V165"/>
+      </g>
+      <g fill="#f4e8c8" opacity=".92">
+        <rect x="-118" y="-118" width="236" height="236" rx="22" fill="none" stroke="#f4e8c8" stroke-width="12"/>
+        <path d="M-118 -38 h236 M-118 38 h236" stroke="#f4e8c8" stroke-width="9" opacity=".9"/>
+        <path d="M-38 -118 v236 M38 -118 v236" stroke="#f4e8c8" stroke-width="9" opacity=".9"/>
+      </g>
+      <circle cx="0" cy="0" r="26" fill="#40502e"/>
+      <rect x="-152" y="-152" width="304" height="304" rx="38" fill="none" stroke="#f4e8c8" stroke-width="2.5" stroke-linecap="round" opacity=".7"/></g>
+  <rect x="24" y="24" width="752" height="752" fill="none" stroke="#f4e8c8" stroke-width="1.5" opacity=".4"/>
+  <text x="60" y="720" font-family="Arial, sans-serif" font-size="14" letter-spacing="5" fill="#f4e8c8" opacity=".75">MATERIAL STUDY</text>
+  <text x="740" y="720" text-anchor="end" font-family="Georgia, 'Times New Roman', serif" font-size="22" fill="#f4e8c8">Jute Crafts</text>
+  <text x="60" y="750" font-family="Arial, sans-serif" font-size="12" letter-spacing="4" fill="#f4e8c8" opacity=".55">CRAFT BD · HANDMADE IN BANGLADESH</text>
+</svg>

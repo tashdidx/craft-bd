@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" role="img" aria-label="Bamboo &amp; Cane">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#3f4b2a"/>
+      <stop offset="1" stop-color="#6f7d43"/>
+    </linearGradient>
+    <pattern id="weave" width="42" height="42" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <path d="M0 21 H42" stroke="#f1ead2" stroke-width="1.2" opacity=".1"/>
+      <path d="M21 0 V42" stroke="#f1ead2" stroke-width="1.2" opacity=".06"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="1000" fill="url(#bg)"/>
+  <rect width="800" height="1000" fill="url(#weave)"/>
+  <rect x="26" y="26" width="748" height="948" fill="none" stroke="#f1ead2" stroke-width="1.5" opacity=".35"/>
+  <g transform="translate(400 380) scale(1.05)">
+      <g fill="none" stroke="#f1ead2" stroke-width="2.5" stroke-linecap="round" opacity=".5">
+        <path d="M-180 -180 l360 360"/><path d="M-135 -180 l360 360"/><path d="M-90 -180 l360 360"/><path d="M-45 -180 l360 360"/><path d="M0 -180 l360 360"/><path d="M45 -180 l360 360"/><path d="M90 -180 l360 360"/><path d="M135 -180 l360 360"/><path d="M180 -180 l360 360"/>
+        <path d="M-180 180 l360 -360"/><path d="M-135 180 l360 -360"/><path d="M-90 180 l360 -360"/><path d="M-45 180 l360 -360"/><path d="M0 180 l360 -360"/><path d="M45 180 l360 -360"/><path d="M90 180 l360 -360"/><path d="M135 180 l360 -360"/><path d="M180 180 l360 -360"/>
+      </g>
+      <g fill="#f1ead2" opacity=".92">
+        <path d="M-104 -160 q104 30 208 0 q-30 104 0 208 q-104 -30 -208 0 q30 -104 0 -208Z"/>
+      </g>
+      <path d="M0 -132 q52 132 0 264 q-52 -132 0 -264Z" fill="#c6aa62" opacity=".85"/>
+      <path d="M-132 0 q132 -52 264 0 q-132 52 -264 0Z" fill="none" stroke="#f1ead2" stroke-width="2.5" stroke-linecap="round" opacity=".8"/></g>
+  <text x="400" y="812" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" letter-spacing="7" fill="#f1ead2">BAMBOO</text>
+  <text x="400" y="878" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="58" letter-spacing="7" fill="#f1ead2">&amp; CANE</text>
+  <path d="M320 908 H480" stroke="#c6aa62" stroke-width="2"/>
+  <text x="400" y="948" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" letter-spacing="5" fill="#f1ead2" opacity=".72">CRAFT BD · BANGLADESH</text>
+</svg>
