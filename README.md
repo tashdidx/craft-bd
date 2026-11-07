@@ -3,7 +3,8 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 4 — authenticity and provenance verification.**
+**Current build: Chunk 3 — artisan showcase and profiles.** Chunks 1
+(foundation), 2 (catalogue), and 4 (provenance verification) are complete.
 Commerce, reviews UI, admin tools, and artisan dashboards arrive in later
 chunks.
 
@@ -43,7 +44,27 @@ chunks.
 - Verification detail pages and QR label pages are `noindex`; the lookup and
   scan pages are indexable.
 
-## What is in Chunk 3
+## What is in Chunk 3 — artisan showcase
+
+- `/artisans`, a public directory of every approved studio with a cover image,
+  portrait, craft specialisation, district, and published piece count.
+- Deterministic, URL-driven filters for search (`q`), craft tradition (`craft`),
+  region (`region`), and sort (`featured`, `name`, `experience`). Matching runs
+  in memory over the approved set, so results are stable and do not need a
+  database migration.
+- `/artisans/[slug]`, a studio profile with a cover header, portrait, craft and
+  place facts, languages, years at the craft, full biography, aggregate review
+  rating, and a grid of that studio's published pieces.
+- Related studios chosen deterministically by shared craft tradition and region.
+- Product detail pages and the product-page maker card link back to the studio
+  profile; the home page adds a feature-makers section.
+- Artisan reads are cached with `'use cache'`, `cacheLife('hours')`, and the
+  `artisans`/`catalogue` tags, using the same cookie-free public Supabase client
+  as the catalogue.
+- Directory, profile loading states, a studio not-found page, and a directory
+  error boundary.
+
+## What is in Chunk 3 — accounts and authentication
 
 - Email/password sign-up, sign-in, and sign-out through Supabase Auth. Craft BD
   never stores or handles credentials itself.
@@ -170,9 +191,11 @@ Key routes:
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home, live catalogue stats, featured pieces, craft traditions |
+| `/` | Home, live catalogue stats, featured pieces, featured makers, craft traditions |
 | `/products` | Catalogue grid with facets, sorting, and pagination |
 | `/products/[slug]` | Product detail, craft story, journey, artisan, certificate |
+| `/artisans` | Public artisan directory with search, craft, region, and sort |
+| `/artisans/[slug]` | Studio profile, biography, rating, and published pieces |
 | `/verify` | Public product and certificate code lookup |
 | `/scan` | In-app camera scanner for product QR labels |
 | `/verify/[code]` | Printable provenance record and integrity check |

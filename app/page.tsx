@@ -11,10 +11,12 @@ import {
   ScrollText,
   ShieldCheck,
 } from "lucide-react";
+import { ArtisanDirectoryCard } from "@/components/artisan/artisan-directory-card";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JOURNEY_STAGES, SITE } from "@/lib/constants";
+import { getFeaturedArtisans } from "@/lib/data/artisans";
 import { getCatalogueFacets, getFeaturedProducts } from "@/lib/data/catalogue";
 import { formatNumber } from "@/lib/format";
 
@@ -112,6 +114,10 @@ export default function Home() {
 
       <Suspense fallback={<FeaturedPiecesSkeleton />}>
         <FeaturedPieces />
+      </Suspense>
+
+      <Suspense fallback={<FeaturedMakersSkeleton />}>
+        <FeaturedMakers />
       </Suspense>
 
       <section
@@ -328,6 +334,40 @@ async function FeaturedPieces() {
   );
 }
 
+async function FeaturedMakers() {
+  const artisans = await getFeaturedArtisans(3);
+
+  if (artisans.length === 0) return null;
+
+  return (
+    <section className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-6">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
+            Meet the makers
+          </p>
+          <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
+            The studios behind the pieces.
+          </h2>
+        </div>
+        <Link
+          href="/artisans"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
+        >
+          All artisan studios
+          <ArrowRight aria-hidden="true" className="size-4" />
+        </Link>
+      </div>
+
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {artisans.map((artisan) => (
+          <ArtisanDirectoryCard key={artisan.id} artisan={artisan} />
+        ))}
+      </div>
+    </section>
+  );
+}
+
 async function CraftTraditions() {
   const facets = await getCatalogueFacets();
   const categories = facets.categories.filter((category) => category.count > 0);
@@ -388,6 +428,30 @@ function FeaturedPiecesSkeleton() {
             <Skeleton className="mt-3 h-5 w-4/5" />
             <Skeleton className="mt-2 h-3 w-1/2" />
             <Skeleton className="mt-4 h-4 w-28" />
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FeaturedMakersSkeleton() {
+  return (
+    <section className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-6">
+      <Skeleton className="h-3 w-28" />
+      <Skeleton className="mt-4 h-9 w-72 max-w-full" />
+      <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {Array.from({ length: 3 }, (_, index) => (
+          <div
+            key={index}
+            className="overflow-hidden rounded-3xl border border-border"
+          >
+            <Skeleton className="aspect-[16/10] w-full rounded-none" />
+            <div className="space-y-3 p-5">
+              <Skeleton className="h-5 w-2/3" />
+              <Skeleton className="h-3 w-1/2" />
+              <Skeleton className="h-10 w-full" />
+            </div>
           </div>
         ))}
       </div>

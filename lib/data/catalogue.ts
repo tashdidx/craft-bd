@@ -424,6 +424,29 @@ export async function getFeaturedProducts(limit = 4): Promise<ProductCardData[]>
   return ((data ?? []) as unknown as RawCardRow[]).map(mapCard);
 }
 
+export async function getProductsByArtisan(
+  artisanId: string,
+): Promise<ProductCardData[]> {
+  "use cache";
+  cacheLife("hours");
+  cacheTag("catalogue", `artisan-products-${artisanId}`);
+
+  const supabase = getPublicSupabaseClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_CARD_COLUMNS)
+    .eq("status", "published")
+    .eq("artisan_id", artisanId)
+    .order("is_featured", { ascending: false })
+    .order("published_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Could not load this studio's pieces: ${error.message}`);
+  }
+
+  return ((data ?? []) as unknown as RawCardRow[]).map(mapCard);
+}
+
 export async function getRelatedProducts(
   categoryId: string,
   excludeProductId: string,

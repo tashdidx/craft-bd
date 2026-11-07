@@ -13,7 +13,8 @@ export async function AccountMenu() {
       <Button asChild variant="ghost" size="sm">
         <Link href="/login">
           <UserRound aria-hidden="true" className="size-4" strokeWidth={1.8} />
-          Sign in
+          <span className="hidden sm:inline">Sign in</span>
+          <span className="sr-only sm:hidden">Sign in</span>
         </Link>
       </Button>
     );

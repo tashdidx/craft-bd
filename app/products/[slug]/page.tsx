@@ -216,7 +216,10 @@ async function ProductDetail({ params }: ProductPageProps) {
           </div>
 
           {artisan ? (
-            <div className="mt-7 flex items-center gap-3 rounded-2xl border border-border bg-card p-4">
+            <Link
+              href={`/artisans/${artisan.slug}`}
+              className="group mt-7 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+            >
               {artisan.avatar_url ? (
                 <Image
                   src={artisan.avatar_url}
@@ -234,7 +237,7 @@ async function ProductDetail({ params }: ProductPageProps) {
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Made by
                 </p>
-                <p className="mt-0.5 truncate font-medium">
+                <p className="mt-0.5 truncate font-medium transition-colors group-hover:text-primary">
                   {artisan.display_name}
                 </p>
                 <p className="truncate text-xs text-muted-foreground">
@@ -246,7 +249,7 @@ async function ProductDetail({ params }: ProductPageProps) {
                 className="size-5 shrink-0 text-primary"
                 strokeWidth={1.8}
               />
-            </div>
+            </Link>
           ) : null}
         </div>
       </div>

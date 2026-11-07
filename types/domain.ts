@@ -83,6 +83,47 @@ export interface ProductDetailData {
   reviewCount: number;
 }
 
+/** Public artisan card projection used by the directory and home page. */
+export interface ArtisanDirectoryEntry {
+  id: string;
+  slug: string;
+  displayName: string;
+  workshopName: string | null;
+  craftSpecialization: string;
+  primaryCategory: Pick<Category, "id" | "name" | "slug"> | null;
+  region: BdDivision;
+  district: string;
+  yearsOfExperience: number;
+  biography: string;
+  avatarUrl: string | null;
+  coverImageUrl: string | null;
+  languages: string[];
+  isFeatured: boolean;
+  productCount: number;
+}
+
+export interface ArtisanDirectoryFacets {
+  crafts: Array<{ slug: string; name: string; count: number }>;
+  regions: CatalogueFacetCount<BdDivision>[];
+  total: number;
+}
+
+export interface ArtisanDirectoryResult {
+  items: ArtisanDirectoryEntry[];
+  total: number;
+  facets: ArtisanDirectoryFacets;
+}
+
+/** Everything the artisan profile route renders in one read. */
+export interface ArtisanDetailData {
+  artisan: Artisan;
+  primaryCategory: Pick<Category, "id" | "name" | "slug"> | null;
+  products: ProductCardData[];
+  productCount: number;
+  ratingAverage: number | null;
+  reviewCount: number;
+}
+
 export interface CatalogueFacetCount<TValue extends string = string> {
   value: TValue;
   label: string;

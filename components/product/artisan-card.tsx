@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { Hammer, Languages, MapPin, Sparkles } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Hammer, Languages, MapPin, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { DIVISION_LABELS } from "@/lib/constants";
 import type { Artisan } from "@/types/domain";
@@ -8,7 +9,7 @@ export function ArtisanCard({ artisan }: { artisan: Artisan }) {
   const initial = artisan.display_name.charAt(0).toUpperCase();
 
   return (
-    <article className="rounded-3xl border border-border bg-card p-6">
+    <article className="group rounded-3xl border border-border bg-card p-6 transition-colors hover:border-primary/40">
       <div className="flex flex-wrap items-start gap-4">
         {artisan.avatar_url ? (
           <Image
@@ -100,6 +101,14 @@ export function ArtisanCard({ artisan }: { artisan: Artisan }) {
       <p className="mt-5 border-t border-border pt-5 text-sm leading-7 text-muted-foreground">
         {artisan.biography}
       </p>
+
+      <Link
+        href={`/artisans/${artisan.slug}`}
+        className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+      >
+        Visit {artisan.display_name.split(" ")[0]}&rsquo;s studio profile
+        <ArrowUpRight aria-hidden="true" className="size-4" strokeWidth={1.8} />
+      </Link>
     </article>
   );
 }

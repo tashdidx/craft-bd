@@ -34,6 +34,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/artisans" className="transition-colors hover:text-primary">
+                Artisan studios
+              </Link>
+            </li>
+            <li>
               <Link
                 href="/products?sort=newest"
                 className="transition-colors hover:text-primary"
