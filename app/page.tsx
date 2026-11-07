@@ -7,6 +7,7 @@ import {
   BookOpen,
   Hammer,
   MapPin,
+  ScanLine,
   ScrollText,
   ShieldCheck,
 } from "lucide-react";
@@ -172,6 +173,34 @@ export default function Home() {
               </p>
             </article>
           ))}
+        </div>
+
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-border bg-card px-6 py-5">
+          <div>
+            <p className="text-sm font-medium">Bought a Craft BD piece?</p>
+            <p className="mt-1 text-sm leading-6 text-muted-foreground">
+              Scan its QR label or enter the certificate code to check the live
+              record.
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button asChild>
+              <Link href="/scan">
+                <ScanLine
+                  aria-hidden="true"
+                  className="size-4"
+                  strokeWidth={1.8}
+                />
+                Scan a product QR
+              </Link>
+            </Button>
+            <Button asChild variant="outline">
+              <Link href="/verify">
+                Enter a code
+                <ArrowRight aria-hidden="true" className="size-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
 

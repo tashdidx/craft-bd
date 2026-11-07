@@ -3,7 +3,7 @@ import { SITE } from "@/lib/constants";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-auto border-t border-border bg-card/60">
+    <footer className="mt-auto border-t border-border bg-card/60 print:hidden">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3">
@@ -71,6 +71,22 @@ export function SiteFooter() {
                 className="transition-colors hover:text-primary"
               >
                 Six-stage craft journey
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/verify"
+                className="transition-colors hover:text-primary"
+              >
+                Verify a product
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/scan"
+                className="transition-colors hover:text-primary"
+              >
+                Scan a product QR
               </Link>
             </li>
             <li>

@@ -10,13 +10,14 @@ import { SITE } from "@/lib/constants";
 
 const navigation = [
   { href: "/products", label: "Catalogue" },
+  { href: "/verify", label: "Verify" },
   { href: "/#craft-traditions", label: "Craft traditions" },
   { href: "/#our-promise", label: "Our promise" },
 ] as const;
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur">
+    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur print:hidden">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6">
         <Link href="/" className="flex shrink-0 items-center gap-3">
           <span className="grid size-10 place-items-center rounded-full bg-primary font-display text-lg text-primary-foreground">
@@ -38,7 +39,7 @@ export function SiteHeader() {
               key={item.href}
               href={item.href}
               className={
-                item.href === "/products"
+                item.href === "/products" || item.href === "/verify"
                   ? "font-medium text-foreground transition-colors hover:text-primary"
                   : "hidden font-medium text-muted-foreground transition-colors hover:text-foreground md:inline"
               }

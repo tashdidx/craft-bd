@@ -84,3 +84,14 @@
     outline-offset: 2px;
   }
 }
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}

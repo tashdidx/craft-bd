@@ -1,6 +1,14 @@
-import { BadgeCheck, CalendarDays, Fingerprint, MapPin } from "lucide-react";
+import Link from "next/link";
+import {
+  ArrowUpRight,
+  BadgeCheck,
+  CalendarDays,
+  Fingerprint,
+  MapPin,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/format";
+import { certificateLabelPath, certificateVerifyPath } from "@/lib/provenance";
 import type { Certificate } from "@/types/domain";
 
 function payloadString(payload: unknown, key: string) {
@@ -90,10 +98,32 @@ export function CertificateCard({ certificate }: { certificate: Certificate }) {
         </div>
       </dl>
 
-      <p className="border-t border-accent-foreground/15 px-6 py-4 text-xs leading-5 text-accent-foreground/60">
-        The hash is computed from the certificate payload recorded at issuance,
-        so any later change to the record would produce a different hash.
-      </p>
+      <div className="border-t border-accent-foreground/15 px-6 py-4">
+        <p className="text-xs leading-5 text-accent-foreground/60">
+          The hash is computed from the certificate payload recorded at
+          issuance, so any later change to the record would produce a different
+          hash.
+        </p>
+        <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <Link
+            href={certificateVerifyPath(certificate.certificate_code)}
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent-foreground underline-offset-4 hover:underline"
+          >
+            Verify this product
+            <ArrowUpRight
+              aria-hidden="true"
+              className="size-4"
+              strokeWidth={1.7}
+            />
+          </Link>
+          <Link
+            href={certificateLabelPath(certificate.certificate_code)}
+            className="inline-flex items-center gap-1 text-sm font-medium text-accent-foreground/70 underline-offset-4 hover:text-accent-foreground hover:underline"
+          >
+            Product QR label
+          </Link>
+        </div>
+      </div>
     </article>
   );
 }
