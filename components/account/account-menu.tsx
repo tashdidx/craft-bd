@@ -1,5 +1,12 @@
 import Link from "next/link";
-import { ChevronDown, LogOut, UserRound } from "lucide-react";
+import {
+  ChevronDown,
+  Heart,
+  LogOut,
+  Package,
+  ShoppingBag,
+  UserRound,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/lib/actions/auth";
 import { displayNameFor, getCurrentUser } from "@/lib/auth";
@@ -63,6 +70,30 @@ export async function AccountMenu() {
         >
           <UserRound aria-hidden="true" className="size-4" strokeWidth={1.7} />
           Your account
+        </Link>
+
+        <Link
+          href="/account/orders"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <Package aria-hidden="true" className="size-4" strokeWidth={1.7} />
+          Orders
+        </Link>
+
+        <Link
+          href="/account/wishlist"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <Heart aria-hidden="true" className="size-4" strokeWidth={1.7} />
+          Wishlist
+        </Link>
+
+        <Link
+          href="/cart"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <ShoppingBag aria-hidden="true" className="size-4" strokeWidth={1.7} />
+          Cart
         </Link>
 
         <form action={signOutAction}>

@@ -2,6 +2,7 @@ import type {
   BdDivision,
   CustomOrderStatus,
   OrderStatus,
+  PaymentStatus,
   ReviewStatus,
   UserRole,
 } from "@/lib/supabase/enums";
@@ -90,6 +91,20 @@ export const ORDER_STATUS_LABELS: Record<OrderStatus, string> = {
   shipped: "Shipped",
   delivered: "Delivered",
   cancelled: "Cancelled",
+};
+
+export const ORDER_STATUS_DESCRIPTIONS: Record<OrderStatus, string> = {
+  pending: "We received the order and the studio is confirming it.",
+  processing: "The studio is preparing and wrapping your pieces.",
+  shipped: "Your parcel is with the delivery partner.",
+  delivered: "The parcel reached the shipping address.",
+  cancelled: "This order was cancelled before dispatch.",
+};
+
+export const PAYMENT_STATUS_LABELS: Record<PaymentStatus, string> = {
+  unpaid: "Payment due",
+  paid: "Paid",
+  refunded: "Refunded",
 };
 
 export const CUSTOM_ORDER_FLOW: ReadonlyArray<CustomOrderStatus> = [

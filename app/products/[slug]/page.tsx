@@ -16,6 +16,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ProductCard } from "@/components/product-card";
+import { AddToCartForm } from "@/components/commerce/add-to-cart-form";
+import { WishlistToggle } from "@/components/commerce/wishlist-toggle";
 import { ArtisanCard } from "@/components/product/artisan-card";
 import { CertificateCard } from "@/components/product/certificate-card";
 import { ProductDetailSkeleton } from "@/components/product/product-detail-skeleton";
@@ -26,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DIVISION_LABELS } from "@/lib/constants";
 import { getProductDetail, getRelatedProducts } from "@/lib/data/catalogue";
+import { getWishlistProductIds } from "@/lib/data/wishlist";
 import { formatBdt, formatWeight } from "@/lib/format";
 
 interface ProductPageProps {
@@ -75,6 +78,7 @@ async function ProductDetail({ params }: ProductPageProps) {
   const related = category
     ? await getRelatedProducts(category.id, product.id)
     : [];
+  const wishlisted = (await getWishlistProductIds()).has(product.id);
   const discount =
     product.compare_at_price_bdt &&
     product.compare_at_price_bdt > product.price_bdt
@@ -172,6 +176,22 @@ async function ProductDetail({ params }: ProductPageProps) {
               Price is set by the artisan studio. Every piece ships with its
               provenance record and care notes.
             </p>
+
+            <div className="mt-5 border-t border-border pt-5">
+              <AddToCartForm
+                productId={product.id}
+                stockQuantity={product.stock_quantity}
+                giftWrapAvailable={product.gift_wrap_available}
+                nextPath={`/products/${product.slug}`}
+              />
+              <div className="mt-3">
+                <WishlistToggle
+                  productId={product.id}
+                  active={wishlisted}
+                  nextPath={`/products/${product.slug}`}
+                />
+              </div>
+            </div>
           </div>
 
           <p className="mt-6 text-sm leading-7 text-muted-foreground">

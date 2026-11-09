@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BadgeCheck,
   BookOpen,
+  Gift,
   Hammer,
   MapPin,
   ScanLine,
@@ -119,6 +120,30 @@ export default function Home() {
       <Suspense fallback={<FeaturedMakersSkeleton />}>
         <FeaturedMakers />
       </Suspense>
+
+      <section className="mx-auto mt-20 w-full max-w-6xl px-5 sm:px-6">
+        <div className="flex flex-col gap-6 rounded-[2rem] border border-border bg-accent px-6 py-8 text-accent-foreground sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-10">
+          <div>
+            <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.24em] text-accent-foreground/70">
+              <Gift aria-hidden="true" className="size-4" strokeWidth={1.7} />
+              Gifting
+            </p>
+            <h2 className="mt-3 text-3xl leading-tight">
+              Find a gift by occasion and budget.
+            </h2>
+            <p className="mt-2 max-w-xl text-sm leading-6 text-accent-foreground/70">
+              Filter the catalogue by the moment and the amount, then add gift
+              wrapping and a message at checkout. Cash on delivery only.
+            </p>
+          </div>
+          <Button asChild variant="secondary" size="lg" className="shrink-0">
+            <Link href="/gifts">
+              Open the gift finder
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </Link>
+          </Button>
+        </div>
+      </section>
 
       <section
         id="craft-traditions"

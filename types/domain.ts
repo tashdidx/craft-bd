@@ -154,3 +154,59 @@ export interface CatalogueResult {
   pageCount: number;
   pageSize: number;
 }
+
+/** One resolved cart line, joined with its product snapshot. */
+export interface CartLine {
+  id: string;
+  productId: string;
+  slug: string;
+  title: string;
+  priceBdt: number;
+  quantity: number;
+  stockQuantity: number;
+  giftWrap: boolean;
+  giftWrapAvailable: boolean;
+  artisanId: string | null;
+  artisanName: string | null;
+  imageUrl: string | null;
+  imageAlt: string;
+  lineTotalBdt: number;
+}
+
+export interface CartData {
+  id: string | null;
+  items: CartLine[];
+  itemCount: number;
+  wrappedUnits: number;
+  subtotalBdt: number;
+  shippingBdt: number;
+  giftWrapBdt: number;
+  totalBdt: number;
+}
+
+export interface WishlistEntry {
+  addedAt: string;
+  product: ProductCardData;
+}
+
+export interface OrderListItem {
+  order: Order;
+  items: OrderItem[];
+}
+
+export interface OrderDetailData {
+  order: Order;
+  items: OrderItem[];
+}
+
+/** Prefill for the checkout shipping form. */
+export interface CheckoutDefaults {
+  recipientName: string;
+  phone: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  district: string;
+  division: BdDivision;
+  postalCode: string;
+}

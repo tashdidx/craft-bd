@@ -996,6 +996,17 @@ export type Database = {
       }
       is_admin: { Args: never; Returns: boolean }
       owns_artisan: { Args: { target_artisan_id: string }; Returns: boolean }
+      place_order: {
+        Args: {
+          p_gift_message: string | null
+          p_order_number: string
+          p_shipping_address: Json
+        }
+        Returns: {
+          order_id: string
+          order_number: string
+        }[]
+      }
     }
     Enums: {
       artisan_status: "pending" | "approved" | "suspended"

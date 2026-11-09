@@ -4,9 +4,13 @@ import { Suspense } from "react";
 import {
   ArrowRight,
   CalendarDays,
+  Heart,
   LogOut,
   MailCheck,
+  Package,
   ShieldCheck,
+  ShoppingBag,
+  type LucideIcon,
 } from "lucide-react";
 import { AccountSkeleton } from "@/components/account/account-skeleton";
 import { PasswordForm } from "@/components/account/password-form";
@@ -16,6 +20,9 @@ import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/lib/actions/auth";
 import { displayNameFor, requireUser } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/constants";
+import { getCartCount } from "@/lib/data/cart";
+import { getOrderCount } from "@/lib/data/orders";
+import { getWishlistCount } from "@/lib/data/wishlist";
 import { formatDate } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -39,6 +46,11 @@ async function AccountContent() {
   const firstName = name.split(/\s+/)[0] ?? name;
   const role = profile?.role ?? "customer";
   const memberSince = profile?.created_at ?? user.created_at;
+  const [orderCount, wishlistCount, cartCount] = await Promise.all([
+    getOrderCount(),
+    getWishlistCount(),
+    getCartCount(),
+  ]);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
@@ -154,6 +166,30 @@ async function AccountContent() {
           </section>
 
           <section className="rounded-3xl border border-border bg-card p-6">
+            <h2 className="text-xl leading-tight">Your craft shelf</h2>
+            <ul className="mt-4 space-y-2">
+              <AccountLink
+                href="/account/orders"
+                label="Orders"
+                count={orderCount}
+                icon={Package}
+              />
+              <AccountLink
+                href="/account/wishlist"
+                label="Wishlist"
+                count={wishlistCount}
+                icon={Heart}
+              />
+              <AccountLink
+                href="/cart"
+                label="Cart"
+                count={cartCount}
+                icon={ShoppingBag}
+              />
+            </ul>
+          </section>
+
+          <section className="rounded-3xl border border-border bg-card p-6">
             <h2 className="text-xl leading-tight">Session</h2>
             <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Signing out clears this browser&apos;s Supabase session.
@@ -182,5 +218,31 @@ async function AccountContent() {
         </aside>
       </div>
     </div>
+  );
+}
+
+function AccountLink({
+  href,
+  label,
+  count,
+  icon: Icon,
+}: {
+  href: string;
+  label: string;
+  count: number;
+  icon: LucideIcon;
+}) {
+  return (
+    <li>
+      <Link
+        href={href}
+        className="flex items-center gap-2 rounded-xl px-2 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+      >
+        <Icon aria-hidden="true" className="size-4" strokeWidth={1.7} />
+        <span className="flex-1">{label}</span>
+        <span className="text-xs tabular-nums">{count}</span>
+        <ArrowRight aria-hidden="true" className="size-3.5" strokeWidth={1.7} />
+      </Link>
+    </li>
   );
 }

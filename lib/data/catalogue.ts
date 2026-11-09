@@ -17,7 +17,7 @@ import type {
   ProductDetailData,
 } from "@/types/domain";
 
-const PRODUCT_CARD_COLUMNS = `
+export const PRODUCT_CARD_COLUMNS = `
   id,
   title,
   slug,
@@ -45,7 +45,7 @@ const PRODUCT_DETAIL_COLUMNS = `
   reviews ( rating )
 `;
 
-interface RawCardRow {
+export interface RawCardRow {
   id: string;
   title: string;
   slug: string;
@@ -89,7 +89,7 @@ function averageRating(ratings: number[]) {
   return Math.round((total / ratings.length) * 10) / 10;
 }
 
-function mapCard(row: RawCardRow): ProductCardData {
+export function mapCard(row: RawCardRow): ProductCardData {
   const images = [...row.product_images].sort(
     (a, b) =>
       Number(b.is_primary) - Number(a.is_primary) ||

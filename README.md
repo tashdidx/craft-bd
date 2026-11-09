@@ -3,10 +3,33 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 3 — artisan showcase and profiles.** Chunks 1
-(foundation), 2 (catalogue), and 4 (provenance verification) are complete.
-Commerce, reviews UI, admin tools, and artisan dashboards arrive in later
-chunks.
+**Current build: Chunk 5 — commerce and cart flow.** Chunks 1 (foundation),
+2 (catalogue), 3 (artisan showcase and accounts), and 4 (provenance
+verification) are complete. Custom orders, reviews UI, and admin tools arrive in
+later chunks.
+
+## What is in Chunk 5 — commerce and cart flow
+
+- A persistent, account-scoped cart: add from a product page or the gift finder,
+  change quantity, toggle gift wrapping per piece, and remove items.
+- `/cart` with line totals, gift-wrap fees, free-shipping progress, and a
+  deterministic order summary.
+- `/checkout` with a validated delivery address (prefilled from the default
+  address when one exists), a gift message, and a server-side recalculation of
+  prices, shipping, and gift-wrap fees. Client-submitted amounts are never
+  trusted.
+- Order placement writes an `orders` snapshot plus `order_items`, clears the
+  cart, and redirects to the order record. Cash on delivery only; no online
+  payment gateway is integrated (varsity project scope).
+- `/account/orders` lists every order with its status; `/account/orders/[orderNumber]`
+  shows the four-stage tracker (Pending → Processing → Shipped → Delivered),
+  item snapshots, totals, delivery address, and gift message.
+- Wishlist toggles from a product page, `/account/wishlist` for saved pieces,
+  and cart/wishlist/order counts in the account area and header.
+- `/gifts`, a deterministic gift finder (FR-14) filtering by occasion and
+  budget, with per-piece gift wrapping and a gift message at checkout.
+- All commerce reads and Server Actions are authenticated and rely on the
+  existing RLS policies; no new migration is required.
 
 ## Stack
 
@@ -193,7 +216,13 @@ Key routes:
 | --- | --- |
 | `/` | Home, live catalogue stats, featured pieces, featured makers, craft traditions |
 | `/products` | Catalogue grid with facets, sorting, and pagination |
-| `/products/[slug]` | Product detail, craft story, journey, artisan, certificate |
+| `/products/[slug]` | Product detail, craft story, journey, artisan, certificate, add to cart |
+| `/gifts` | Gift finder by occasion and budget with per-piece gift wrapping |
+| `/cart` | Account cart with quantities, gift wrap, and deterministic totals |
+| `/checkout` | Delivery details, gift message, and cash-on-delivery order placement |
+| `/account/orders` | Order history with status |
+| `/account/orders/[orderNumber]` | Order tracker, item snapshots, address, and totals |
+| `/account/wishlist` | Saved pieces |
 | `/artisans` | Public artisan directory with search, craft, region, and sort |
 | `/artisans/[slug]` | Studio profile, biography, rating, and published pieces |
 | `/verify` | Public product and certificate code lookup |

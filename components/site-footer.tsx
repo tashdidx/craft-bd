@@ -47,6 +47,11 @@ export function SiteFooter() {
               </Link>
             </li>
             <li>
+              <Link href="/gifts" className="transition-colors hover:text-primary">
+                Gift finder
+              </Link>
+            </li>
+            <li>
               <Link
                 href="/#craft-traditions"
                 className="transition-colors hover:text-primary"

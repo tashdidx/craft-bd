@@ -5,15 +5,20 @@ import {
   AccountMenu,
   AccountMenuSkeleton,
 } from "@/components/account/account-menu";
+import {
+  CartButton,
+  CartButtonSkeleton,
+} from "@/components/commerce/cart-button";
 import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
 
 const navigation = [
-  { href: "/products", label: "Catalogue", primary: true },
-  { href: "/artisans", label: "Artisans", primary: true },
-  { href: "/verify", label: "Verify", primary: true },
-  { href: "/#craft-traditions", label: "Craft traditions", primary: false },
-  { href: "/#our-promise", label: "Our promise", primary: false },
+  { href: "/products", label: "Catalogue", primary: true, compact: false },
+  { href: "/artisans", label: "Artisans", primary: true, compact: false },
+  { href: "/gifts", label: "Gifts", primary: true, compact: true },
+  { href: "/verify", label: "Verify", primary: true, compact: true },
+  { href: "/#craft-traditions", label: "Craft traditions", primary: false, compact: false },
+  { href: "/#our-promise", label: "Our promise", primary: false, compact: false },
 ] as const;
 
 export function SiteHeader() {
@@ -47,7 +52,9 @@ export function SiteHeader() {
               href={item.href}
               className={
                 item.primary
-                  ? "font-medium text-foreground transition-colors hover:text-primary"
+                  ? item.compact
+                    ? "hidden font-medium text-foreground transition-colors hover:text-primary md:inline"
+                    : "font-medium text-foreground transition-colors hover:text-primary"
                   : "hidden font-medium text-muted-foreground transition-colors hover:text-foreground lg:inline"
               }
             >
@@ -60,6 +67,9 @@ export function SiteHeader() {
               <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           </Button>
+          <Suspense fallback={<CartButtonSkeleton />}>
+            <CartButton />
+          </Suspense>
           <Suspense fallback={<AccountMenuSkeleton />}>
             <AccountMenu />
           </Suspense>
