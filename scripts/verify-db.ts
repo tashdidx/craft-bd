@@ -238,6 +238,177 @@ async function main() {
   assert(rlsCheck.missing === 0, "RLS must be enabled on every public table");
   console.log("  ✓ RLS is enabled on every public table");
 
+  const orderRpcCheck = await scalar<{ present: boolean }>(`
+    select exists (
+      select 1
+      from pg_proc p
+      join pg_namespace n on n.oid = p.pronamespace
+      where n.nspname = 'public'
+        and p.proname = 'place_order'
+    ) as present
+  `);
+  assert(orderRpcCheck.present, "the atomic place_order RPC must exist");
+  console.log("  ✓ the atomic place_order RPC exists");
+
+  // Exercise the checkout transaction offline with the seeded customer's cart.
+  const testCustomer = "33333333-3333-4333-8333-333333333304";
+  const testProduct = "b1000000-0000-4000-8000-000000000013";
+  const testCart = "a4000000-0000-4000-8000-000000000001";
+  const testAddress = `'{
+    "recipient_name": "Offline Test",
+    "phone": "+8801700000000",
+    "address_line1": "12 Test Lane",
+    "address_line2": null,
+    "city": "Dhaka",
+    "district": "Dhaka",
+    "division": "dhaka",
+    "postal_code": "1207"
+  }'::jsonb`;
+
+  await db.exec(`
+    create or replace function auth.uid()
+    returns uuid language sql stable
+    as $$ select '${testCustomer}'::uuid $$;
+  `);
+
+  const stockBefore = await scalar<{ stock: number }>(`
+    select stock_quantity::int as stock
+    from public.products
+    where id = '${testProduct}'
+  `);
+
+  const placed = await scalar<{
+    order_id: string;
+    order_number: string;
+  }>(`
+    select order_id, order_number
+    from public.place_order('CBD-2026-9001', ${testAddress}, 'Offline test')
+  `);
+
+  assert(
+    placed.order_number === "CBD-2026-9001",
+    "place_order must return the generated order number",
+  );
+
+  const placedOrder = await scalar<{
+    subtotal: number;
+    shipping: number;
+    gift_wrap: number;
+    total: number;
+    gift_wrap_flag: boolean;
+  }>(`
+    select
+      subtotal_bdt::int as subtotal,
+      shipping_bdt::int as shipping,
+      gift_wrap_bdt::int as gift_wrap,
+      total_bdt::int as total,
+      gift_wrap as gift_wrap_flag
+    from public.orders
+    where id = '${placed.order_id}'
+  `);
+
+  assert(placedOrder.subtotal === 1_750, "order subtotal must come from the product price");
+  assert(placedOrder.shipping === 120, "orders below BDT 10,000 pay BDT 120 shipping");
+  assert(placedOrder.gift_wrap === 150, "gift wrap must be charged per wrapped unit");
+  assert(placedOrder.total === 2_020, "order total must add subtotal, shipping, and gift wrap");
+  assert(placedOrder.gift_wrap_flag, "orders with wrapped units must set gift_wrap");
+
+  const placedItem = await scalar<{
+    quantity: number;
+    unit_price: number;
+    gift_wrap: boolean;
+  }>(`
+    select quantity, unit_price_bdt::int as unit_price, gift_wrap
+    from public.order_items
+    where order_id = '${placed.order_id}'
+  `);
+
+  assert(placedItem.quantity === 1, "order item quantity must match the cart");
+  assert(placedItem.unit_price === 1_750, "order item price must be snapshotted");
+  assert(placedItem.gift_wrap, "order item gift wrap must be snapshotted");
+
+  const stockAfter = await scalar<{ stock: number }>(`
+    select stock_quantity::int as stock
+    from public.products
+    where id = '${testProduct}'
+  `);
+
+  assert(
+    stockAfter.stock === stockBefore.stock - 1,
+    "place_order must decrement product stock",
+  );
+
+  const cartAfter = await scalar<{ items: number }>(`
+    select count(*)::int as items
+    from public.cart_items
+    where cart_id = '${testCart}'
+  `);
+
+  assert(cartAfter.items === 0, "place_order must clear the customer's cart");
+  console.log("  ✓ place_order writes snapshots, decrements stock, and clears the cart");
+
+  async function expectPlaceOrderError(orderNumber: string, marker: string) {
+    let caught: unknown = null;
+    try {
+      await db.query(
+        `select * from public.place_order('${orderNumber}', ${testAddress}, null)`,
+      );
+    } catch (error) {
+      caught = error;
+    }
+
+    assert(
+      String((caught as Error | null)?.message ?? "").includes(marker),
+      `place_order must raise ${marker}`,
+    );
+  }
+
+  // The per-line quantity cap is validated before stock.
+  await db.exec(`
+    insert into public.cart_items (cart_id, product_id, quantity, gift_wrap)
+    values ('${testCart}', '${testProduct}', 99, false)
+  `);
+  await expectPlaceOrderError("CBD-2026-9002", "CRAFT_BD_INVALID_ITEMS");
+
+  // Over-ordering must raise and leave both stock and order history untouched.
+  await db.exec(`
+    update public.cart_items
+    set quantity = 5
+    where cart_id = '${testCart}' and product_id = '${testProduct}';
+
+    update public.products
+    set stock_quantity = 3
+    where id = '${testProduct}';
+  `);
+  await expectPlaceOrderError("CBD-2026-9003", "CRAFT_BD_INSUFFICIENT_STOCK");
+
+  const stockAfterFailures = await scalar<{ stock: number }>(`
+    select stock_quantity::int as stock
+    from public.products
+    where id = '${testProduct}'
+  `);
+  const failedOrders = await scalar<{ orders: number }>(`
+    select count(*)::int as orders
+    from public.orders
+    where order_number in ('CBD-2026-9002', 'CBD-2026-9003')
+  `);
+
+  assert(
+    stockAfterFailures.stock === 3,
+    "a failed checkout must not move stock",
+  );
+  assert(failedOrders.orders === 0, "a failed checkout must not write an order");
+  console.log("  ✓ invalid and over-stock checkouts roll back atomically");
+
+  await db.exec(`
+    delete from public.cart_items
+    where cart_id = '${testCart}' and product_id = '${testProduct}';
+
+    update public.products
+    set stock_quantity = ${stockBefore.stock}
+    where id = '${testProduct}';
+  `);
+
   const adminCheck = await scalar<{ admins: number }>(`
     select count(*)::int as admins from public.profiles where role = 'admin'
   `);

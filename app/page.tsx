@@ -1,9 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import {
   ArrowRight,
-  BadgeCheck,
   BookOpen,
   Gift,
   Hammer,
@@ -13,10 +11,13 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { ArtisanDirectoryCard } from "@/components/artisan/artisan-directory-card";
+import { Faq } from "@/components/home/faq";
+import { HeroCarousel } from "@/components/home/hero-carousel";
+import { Testimonials } from "@/components/home/testimonials";
 import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { JOURNEY_STAGES, SITE } from "@/lib/constants";
+import { JOURNEY_STAGES } from "@/lib/constants";
 import { getFeaturedArtisans } from "@/lib/data/artisans";
 import { getCatalogueFacets, getFeaturedProducts } from "@/lib/data/catalogue";
 import { formatNumber } from "@/lib/format";
@@ -51,65 +52,13 @@ const promises = [
 export default function Home() {
   return (
     <div className="flex flex-1 flex-col">
-      <section className="relative overflow-hidden border-b border-border">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_15%_10%,rgba(154,63,36,0.10),transparent_45%),radial-gradient(circle_at_85%_25%,rgba(39,64,96,0.10),transparent_40%)]" />
-        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-12 px-5 py-14 sm:px-6 sm:py-20 lg:grid-cols-[1.15fr_0.85fr]">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.3em] text-primary">
-              A marketplace with memory
-            </p>
-            <h1 className="mt-5 max-w-3xl text-5xl leading-[1.03] sm:text-6xl lg:text-7xl">
-              Handmade in Bangladesh, carried with its story.
-            </h1>
-            <p className="mt-7 max-w-2xl text-lg leading-8 text-muted-foreground">
-              {SITE.description}
-            </p>
+      <section data-hero className="border-b border-border">
+        <HeroCarousel />
 
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button asChild size="lg">
-                <Link href="/products">
-                  Browse the catalogue
-                  <ArrowRight aria-hidden="true" className="size-4" />
-                </Link>
-              </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link href="/#our-promise">How provenance works</Link>
-              </Button>
-            </div>
-
-            <Suspense fallback={<CatalogueStatsSkeleton />}>
-              <CatalogueStats />
-            </Suspense>
-          </div>
-
-          <aside className="relative hidden lg:block">
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[2rem] border border-border bg-secondary">
-              <Image
-                src="/crafts/jamdani.svg"
-                alt="Lotus and river motifs from the jamdani weaving tradition"
-                fill
-                preload
-                sizes="(min-width: 1024px) 38vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-            <div className="absolute -bottom-6 -left-8 w-64 rounded-2xl border border-border bg-card p-5 shadow-[0_24px_80px_-40px_rgba(43,33,25,0.5)]">
-              <div className="flex items-center gap-2 text-primary">
-                <BadgeCheck
-                  aria-hidden="true"
-                  className="size-5"
-                  strokeWidth={1.7}
-                />
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em]">
-                  Provenance trail
-                </p>
-              </div>
-              <p className="mt-3 text-sm leading-6 text-muted-foreground">
-                Maker, origin, material story, six-stage journey, and a
-                certificate code — attached to every published piece.
-              </p>
-            </div>
-          </aside>
+        <div className="mx-auto w-full max-w-6xl px-5 sm:px-6">
+          <Suspense fallback={<CatalogueStatsSkeleton />}>
+            <CatalogueStats />
+          </Suspense>
         </div>
       </section>
 
@@ -120,6 +69,8 @@ export default function Home() {
       <Suspense fallback={<FeaturedMakersSkeleton />}>
         <FeaturedMakers />
       </Suspense>
+
+      <Testimonials />
 
       <section className="mx-auto mt-20 w-full max-w-6xl px-5 sm:px-6">
         <div className="flex flex-col gap-6 rounded-[2rem] border border-border bg-accent px-6 py-8 text-accent-foreground sm:flex-row sm:items-center sm:justify-between sm:px-10 sm:py-10">
@@ -276,6 +227,8 @@ export default function Home() {
         </div>
       </section>
 
+      <Faq />
+
       <section className="mx-auto mt-20 w-full max-w-6xl px-5 pb-20 sm:px-6">
         <div className="flex flex-wrap items-center justify-between gap-6 rounded-[2rem] border border-border bg-card px-7 py-8 sm:px-10">
           <div>
@@ -310,7 +263,7 @@ async function CatalogueStats() {
   ];
 
   return (
-    <dl className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6">
+    <dl className="grid max-w-lg grid-cols-3 gap-4 py-8">
       {stats.map((stat) => (
         <div key={stat.label}>
           <dt className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
@@ -429,7 +382,7 @@ async function CraftTraditions() {
 
 function CatalogueStatsSkeleton() {
   return (
-    <div className="mt-10 grid max-w-lg grid-cols-3 gap-4 border-t border-border pt-6">
+    <div className="grid max-w-lg grid-cols-3 gap-4 py-8">
       {Array.from({ length: 3 }, (_, index) => (
         <div key={index}>
           <Skeleton className="h-2.5 w-20" />

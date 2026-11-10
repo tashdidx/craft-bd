@@ -23,8 +23,8 @@ const navigation = [
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-40 border-b border-border/80 bg-background/90 backdrop-blur print:hidden">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-6">
+    <header className="site-header z-40 px-3 pt-3 pb-2 sm:px-5 sm:pt-4 print:hidden">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 rounded-full border border-border/80 bg-background/80 px-3 py-2.5 shadow-[0_18px_50px_-32px_rgba(43,33,25,0.55)] ring-1 ring-white/60 ring-inset backdrop-blur-xl sm:gap-4 sm:px-5 sm:py-3">
         <Link href="/" className="flex shrink-0 items-center gap-3">
           <span
             aria-hidden="true"

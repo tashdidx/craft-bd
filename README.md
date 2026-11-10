@@ -18,9 +18,11 @@ later chunks.
   address when one exists), a gift message, and a server-side recalculation of
   prices, shipping, and gift-wrap fees. Client-submitted amounts are never
   trusted.
-- Order placement writes an `orders` snapshot plus `order_items`, clears the
-  cart, and redirects to the order record. Cash on delivery only; no online
-  payment gateway is integrated (varsity project scope).
+- Order placement calls the atomic `place_order` database function: it locks the
+  cart's products, recalculates every price and fee, writes the `orders` snapshot
+  plus `order_items`, decrements stock, clears the cart, and redirects to the
+  order record — all in one transaction. Cash on delivery only; no online payment
+  gateway is integrated (varsity project scope).
 - `/account/orders` lists every order with its status; `/account/orders/[orderNumber]`
   shows the four-stage tracker (Pending → Processing → Shipped → Delivered),
   item snapshots, totals, delivery address, and gift message.
@@ -28,8 +30,11 @@ later chunks.
   and cart/wishlist/order counts in the account area and header.
 - `/gifts`, a deterministic gift finder (FR-14) filtering by occasion and
   budget, with per-piece gift wrapping and a gift message at checkout.
-- All commerce reads and Server Actions are authenticated and rely on the
-  existing RLS policies; no new migration is required.
+- All commerce reads and Server Actions are authenticated. Cart, wishlist, and
+  order reads use the existing RLS policies; order placement uses the
+  security-definer `place_order` RPC added in
+  `supabase/migrations/20261109120000_craft_bd_order_stock.sql` so stock cannot
+  be over-sold by concurrent checkouts.
 
 ## Stack
 
@@ -121,8 +126,18 @@ later chunks.
   `'use cache'` + `cacheLife` under Next.js Cache Components.
 - Shared site header/footer, product cards, ratings, filters, loading states,
   and a custom not-found page.
-- A refreshed home page with live catalogue stats, featured pieces, craft
-  traditions, provenance promises, and the six-stage journey overview.
+- A refreshed home page with a full-bleed four-slide craft hero carousel — each
+  slide's image fills the section width behind overlaid copy, with autoplay,
+  pause/play, arrows, dots, swipe, and reduced-motion support — followed by live
+  catalogue stats, featured pieces, featured makers, a static customer
+  testimonial wall, craft traditions, provenance promises, the six-stage journey
+  overview, and a static FAQ accordion.
+- Two static home sections that need no data or JavaScript: a testimonial wall
+  (one featured quote plus two supporting notes) and an exclusive native
+  `<details>` FAQ covering provenance, delivery, gift wrap, and stock.
+- A floating pill navigation: the header is an ivory, bordered oval with a
+  backdrop blur. It overlays the home hero (the carousel starts at the top of
+  the page) and stays sticky on every other route.
 
 ## What is in Chunk 1
 
@@ -210,11 +225,14 @@ Supabase, so `.env.local` must point at a project with the migrations and seed
 applied. Public pages remain readable through the anon/publishable key; no
 service-role key is needed for browsing.
 
+Updating an existing project? Run `npm run db:push` after pulling this chunk to
+apply the atomic `place_order` migration before testing checkout.
+
 Key routes:
 
 | Route | Purpose |
 | --- | --- |
-| `/` | Home, live catalogue stats, featured pieces, featured makers, craft traditions |
+| `/` | Home, four-slide craft carousel, live catalogue stats, featured pieces, featured makers, craft traditions |
 | `/products` | Catalogue grid with facets, sorting, and pagination |
 | `/products/[slug]` | Product detail, craft story, journey, artisan, certificate, add to cart |
 | `/gifts` | Gift finder by occasion and budget with per-piece gift wrapping |
@@ -272,6 +290,8 @@ Key rules enforced by the database:
 
 - Money is `numeric(12,2)` in BDT; order and line totals are generated columns.
 - A published product must have a publish date; stock cannot go negative.
+- Checkout validates and decrements stock inside one `place_order` transaction,
+  so concurrent orders cannot oversell a piece.
 - Every product can have one craft story, six ordered journey stages, one
   active certificate, and one primary image.
 - Customers can only review products from a delivered order item.

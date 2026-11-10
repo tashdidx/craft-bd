@@ -85,6 +85,69 @@
   }
 }
 
+.hero-overlay {
+  background:
+    linear-gradient(
+      100deg,
+      rgba(17, 12, 9, 0.94) 0%,
+      rgba(17, 12, 9, 0.82) 38%,
+      rgba(17, 12, 9, 0.42) 72%,
+      rgba(17, 12, 9, 0.62) 100%
+    ),
+    radial-gradient(
+      circle at 78% 18%,
+      rgba(154, 63, 36, 0.32),
+      transparent 46%
+    );
+}
+
+.hero-bottom-fade {
+  background: linear-gradient(
+    to top,
+    rgba(17, 12, 9, 0.86),
+    rgba(17, 12, 9, 0)
+  );
+}
+
+/*
+ * The navigation is a floating pill. It sits in the page flow as a sticky
+ * header everywhere, and overlays the home page's full-bleed hero, where it is
+ * pulled out of the flow so the carousel can start at the very top of the page.
+ */
+.site-header {
+  position: sticky;
+  top: 0;
+}
+
+body:has([data-hero]) .site-header {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+}
+
+/* Soften page content passing behind the floating pill on ordinary pages. */
+body:not(:has([data-hero])) .site-header {
+  background: linear-gradient(
+    to bottom,
+    rgba(251, 247, 240, 0.92),
+    rgba(251, 247, 240, 0.55) 65%,
+    rgba(251, 247, 240, 0)
+  );
+}
+
+@keyframes hero-note-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 10px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media print {
   body {
     background: #ffffff;
