@@ -40,7 +40,7 @@ const SLIDES: readonly HeroSlide[] = [
     eyebrow: "A marketplace with memory",
     title: "Handmade in Bangladesh, carried with its story.",
     description: SITE.description,
-    image: "/crafts/jamdani.svg",
+    image: "/hero/hero-1.jpg",
     tag: "Jamdani · Rupganj",
     note: "Maker, origin, material story, six-stage journey, and a certificate code — attached to every published piece.",
     primary: { href: "/products", label: "Browse the catalogue" },
@@ -52,7 +52,7 @@ const SLIDES: readonly HeroSlide[] = [
     title: "Clay remembers the hand that shaped it.",
     description:
       "Wheel-thrown vessels and hand-modelled terracotta from Dhamrai, fired in small batches and finished without hiding the maker's touch.",
-    image: "/crafts/clay-pottery.svg",
+    image: "/hero/hero-2.jpg",
     tag: "Terracotta · Dhamrai",
     note: "Each studio carries its district, its firing tradition, and the years its makers have spent at the wheel.",
     primary: {
@@ -67,7 +67,7 @@ const SLIDES: readonly HeroSlide[] = [
     title: "Every stitch carries a story.",
     description:
       "Nakshi kantha turns worn cloth into a record of family memory — thousands of running stitches, each one placed by hand.",
-    image: "/crafts/nakshi-kantha.svg",
+    image: "/hero/hero-3.jpg",
     tag: "Nakshi kantha · Jamalpur",
     note: "Origin, history, traditional use, materials, and cultural meaning are recorded alongside the piece.",
     primary: {
@@ -82,7 +82,7 @@ const SLIDES: readonly HeroSlide[] = [
     title: "Know the maker. Keep the record.",
     description:
       "Every piece arrives with its studio, origin, six-stage making journey, and a certificate code you can check against the live record.",
-    image: "/crafts/brass-ware.svg",
+    image: "/hero/hero-4.jpg",
     tag: "Brass · Dhamrai",
     note: "A SHA-256 certificate hash ties the printed code to the recorded payload. Scan it or enter the code to verify.",
     primary: { href: "/verify", label: "Verify a certificate" },
@@ -90,7 +90,7 @@ const SLIDES: readonly HeroSlide[] = [
   },
 ];
 
-const AUTOPLAY_MS = 7_000;
+const AUTOPLAY_MS = 3_000;
 const SWIPE_THRESHOLD = 48;
 
 export function HeroCarousel() {
@@ -163,14 +163,12 @@ export function HeroCarousel() {
     else previous();
   };
 
-  const trackStyle = { transform: `translate3d(-${active * 100}%, 0, 0)` };
-
   return (
     <div
       role="region"
       aria-roledescription="carousel"
       aria-label="Featured craft traditions"
-      className="relative isolate flex min-h-[560px] w-full touch-pan-y flex-col overflow-hidden bg-[#110c09] sm:min-h-[620px] lg:min-h-[680px]"
+      className="relative isolate flex h-[760px] w-full touch-pan-y flex-col overflow-hidden bg-[#110c09]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocusCapture={() => setPaused(true)}
@@ -182,30 +180,17 @@ export function HeroCarousel() {
       }}
     >
       <div aria-hidden="true" className="absolute inset-0 -z-10 overflow-hidden">
-        <div
-          className="flex h-full w-full will-change-transform transition-transform duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-          style={trackStyle}
-        >
-          {SLIDES.map((slide, index) => {
-            const isActive = index === active;
-
-            return (
-              <div key={slide.id} className="relative h-full w-full shrink-0">
-                <Image
-                  src={slide.image}
-                  alt=""
-                  fill
-                  preload={index === 0}
-                  sizes="100vw"
-                  draggable={false}
-                  className={cn(
-                    "select-none object-cover object-center transition-transform duration-[1400ms] ease-out motion-reduce:transition-none",
-                    isActive ? "scale-100" : "scale-105",
-                  )}
-                />
-              </div>
-            );
-          })}
+        <div className="relative h-full w-full">
+          <Image
+            key={activeSlide.id}
+            src={activeSlide.image}
+            alt=""
+            fill
+            preload={active === 0}
+            sizes="100vw"
+            draggable={false}
+            className="animate-[hero-image-in_900ms_cubic-bezier(0.22,1,0.36,1)] select-none object-cover object-center motion-reduce:animate-none"
+          />
         </div>
 
         <div className="hero-overlay absolute inset-0" />
@@ -213,71 +198,59 @@ export function HeroCarousel() {
       </div>
 
       <div className="relative mx-auto flex w-full max-w-6xl flex-1 flex-col justify-between px-5 pb-12 pt-28 sm:px-6 sm:pb-16 sm:pt-32 lg:pb-20 lg:pt-36">
-        <div className="max-w-2xl overflow-hidden">
-          <div
-            className="flex will-change-transform transition-transform duration-[850ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none"
-            style={trackStyle}
-          >
-            {SLIDES.map((slide, index) => {
-              const isActive = index === active;
-              const Heading = isActive ? "h1" : "div";
-
-              return (
-                <div
-                  key={slide.id}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${index + 1} of ${SLIDES.length}`}
-                  aria-hidden={!isActive}
-                  inert={!isActive}
-                  className="w-full shrink-0 self-stretch"
-                >
-                  <div className="flex min-h-[350px] flex-col justify-center sm:min-h-[380px] lg:min-h-[400px]">
-                    <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
-                      <Sparkles
-                        aria-hidden="true"
-                        className="size-3"
-                        strokeWidth={1.8}
-                      />
-                      {slide.tag}
-                    </div>
-
-                    <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#e7b985]">
-                      {slide.eyebrow}
-                    </p>
-                    <Heading className="mt-4 max-w-2xl text-5xl leading-[1.02] text-[#fbf7f0] sm:text-6xl lg:text-[4.15rem]">
-                      {slide.title}
-                    </Heading>
-                    <p className="mt-6 max-w-xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
-                      {slide.description}
-                    </p>
-
-                    <div className="mt-8 flex flex-wrap gap-3">
-                      <Button
-                        asChild
-                        size="lg"
-                        className="bg-[#f6efe4] text-[#2b2119] hover:bg-white"
-                      >
-                        <Link href={slide.primary.href}>
-                          {slide.primary.label}
-                          <ArrowRight aria-hidden="true" className="size-4" />
-                        </Link>
-                      </Button>
-                      <Button
-                        asChild
-                        size="lg"
-                        variant="outline"
-                        className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
-                      >
-                        <Link href={slide.secondary.href}>
-                          {slide.secondary.label}
-                        </Link>
-                      </Button>
-                    </div>
-                  </div>
+        <div className="w-full max-w-2xl min-w-0 overflow-hidden">
+          <div className="w-full">
+            <div
+              key={activeSlide.id}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${active + 1} of ${SLIDES.length}`}
+              className="animate-[hero-content-in_700ms_cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none"
+            >
+              <div className="flex min-h-[350px] flex-col justify-center sm:min-h-[380px] lg:min-h-[400px]">
+                <div className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.18em] text-white/85 backdrop-blur-md">
+                  <Sparkles
+                    aria-hidden="true"
+                    className="size-3"
+                    strokeWidth={1.8}
+                  />
+                  {activeSlide.tag}
                 </div>
-              );
-            })}
+
+                <p className="mt-5 text-[11px] font-semibold uppercase tracking-[0.3em] text-[#e7b985]">
+                  {activeSlide.eyebrow}
+                </p>
+                <h1 className="mt-4 max-w-4xl text-5xl leading-[1.02] text-[#fbf7f0] sm:text-6xl lg:text-[3.55rem]">
+                  {activeSlide.title}
+                </h1>
+                <p className="mt-6 max-w-xl text-base leading-7 text-white/75 sm:text-lg sm:leading-8">
+                  {activeSlide.description}
+                </p>
+
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-[#f6efe4] text-[#2b2119] hover:bg-white"
+                  >
+                    <Link href={activeSlide.primary.href}>
+                      {activeSlide.primary.label}
+                      <ArrowRight aria-hidden="true" className="size-4" />
+                    </Link>
+                  </Button>
+                  <Button
+                    asChild
+                    size="lg"
+                    variant="outline"
+                    className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+                  >
+                    <Link href={activeSlide.secondary.href}>
+                      {activeSlide.secondary.label}
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
