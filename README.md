@@ -3,10 +3,34 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 5 — commerce and cart flow.** Chunks 1 (foundation),
-2 (catalogue), 3 (artisan showcase and accounts), and 4 (provenance
-verification) are complete. Custom orders, reviews UI, and admin tools arrive in
-later chunks.
+**Current build: Chunk 6 — custom orders and reviews.** Chunks 1 (foundation),
+2 (catalogue), 3 (artisan showcase and accounts), 4 (provenance verification),
+and 5 (commerce and cart flow) are complete. Admin tools arrive in a later chunk.
+
+## What is in Chunk 6 — custom orders and reviews
+
+- `/custom-orders`, the customer's bespoke request list with request codes,
+  studio, status, budget, and estimate.
+- `/custom-orders/new`, a validated commission form covering the studio, piece
+  type, design description, colour, size, material, quantity, budget range,
+  notes, and an optional reference link. Requests open preselected from an
+  artisan profile ("Commission a custom piece").
+- `/custom-orders/[requestCode]`, the request brief, studio estimate, quote
+  response, and a chronological timeline of every stage from submitted to
+  completed. Request codes follow `CUS-YYYY-NNNN`.
+- Customers can approve or decline a studio estimate. The update is guarded by
+  the current `quoted` status and customer ownership; the new
+  `20261109130000_craft_bd_custom_order_guards.sql` migration locks every other
+  brief field at the database layer.
+- Delivered order items show a review form on
+  `/account/orders/[orderNumber]`. Reviews require the item to belong to the
+  signed-in customer's delivered order, are limited to one per piece, and start
+  as `pending` until moderation.
+- Published reviews appear on `/products/[slug]` with the rating average,
+  star distribution, verified-purchase badges, and dates. Product cards and
+  artisan ratings continue to aggregate only published reviews.
+- Custom orders, reviews, and the new request count are linked from the account
+  page, account menu, header navigation, and artisan profiles.
 
 ## What is in Chunk 5 — commerce and cart flow
 
@@ -226,7 +250,8 @@ applied. Public pages remain readable through the anon/publishable key; no
 service-role key is needed for browsing.
 
 Updating an existing project? Run `npm run db:push` after pulling this chunk to
-apply the atomic `place_order` migration before testing checkout.
+apply the atomic `place_order` migration and the custom-order guard migration
+before testing checkout and estimate responses.
 
 Key routes:
 
@@ -234,10 +259,13 @@ Key routes:
 | --- | --- |
 | `/` | Home, four-slide craft carousel, live catalogue stats, featured pieces, featured makers, craft traditions |
 | `/products` | Catalogue grid with facets, sorting, and pagination |
-| `/products/[slug]` | Product detail, craft story, journey, artisan, certificate, add to cart |
+| `/products/[slug]` | Product detail, craft story, journey, artisan, certificate, reviews, add to cart |
 | `/gifts` | Gift finder by occasion and budget with per-piece gift wrapping |
 | `/cart` | Account cart with quantities, gift wrap, and deterministic totals |
 | `/checkout` | Delivery details, gift message, and cash-on-delivery order placement |
+| `/custom-orders` | Bespoke request history with statuses and estimates |
+| `/custom-orders/new` | Commission form with studio, brief, budget, and reference link |
+| `/custom-orders/[requestCode]` | Request brief, quote response, and studio timeline |
 | `/account/orders` | Order history with status |
 | `/account/orders/[orderNumber]` | Order tracker, item snapshots, address, and totals |
 | `/account/wishlist` | Saved pieces |
@@ -270,6 +298,10 @@ Every seeded account uses the password **`CraftBD@2026`**.
 All names, workshops, prices, and reviews are demo data. The craft histories and
 regional references describe real Bangladeshi traditions.
 
+To test the review form, open Nusrat Jahan's delivered order **`CBD-2026-1005`**:
+its Dhamrai Brass Kalash has no review yet, so the form appears. Her order
+`CBD-2026-1001` shows the "you already reviewed this piece" state instead.
+
 ## Data model
 
 | Area | Tables |
@@ -294,7 +326,11 @@ Key rules enforced by the database:
   so concurrent orders cannot oversell a piece.
 - Every product can have one craft story, six ordered journey stages, one
   active certificate, and one primary image.
-- Customers can only review products from a delivered order item.
+- Customers can only review products from a delivered order item, and only once
+  per piece. A trigger forces every customer review to start `pending` and
+  verified, and limits later edits to the written content.
+- Custom-order customers may only answer a quote or withdraw a request; the
+  brief, studio, and estimate fields are locked by a trigger once sent.
 - Artisans can manage their own products/images/stories/journeys, but only
   admins can change artisan approval status, featuring, or role.
 - Admin authorization uses the signed JWT `app_metadata.role`, not a mutable

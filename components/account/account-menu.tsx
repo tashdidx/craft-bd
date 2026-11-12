@@ -4,6 +4,7 @@ import {
   Heart,
   LogOut,
   Package,
+  Scissors,
   ShoppingBag,
   UserRound,
 } from "lucide-react";
@@ -41,7 +42,7 @@ export async function AccountMenu() {
         <span className="grid size-6 shrink-0 place-items-center rounded-full bg-primary text-[11px] font-semibold text-primary-foreground">
           {initial}
         </span>
-        <span className="hidden max-w-24 truncate text-sm font-medium sm:inline">
+        <span className="hidden max-w-24 truncate text-sm font-medium lg:inline">
           {firstName}
         </span>
         <ChevronDown
@@ -78,6 +79,14 @@ export async function AccountMenu() {
         >
           <Package aria-hidden="true" className="size-4" strokeWidth={1.7} />
           Orders
+        </Link>
+
+        <Link
+          href="/custom-orders"
+          className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+        >
+          <Scissors aria-hidden="true" className="size-4" strokeWidth={1.7} />
+          Custom orders
         </Link>
 
         <Link

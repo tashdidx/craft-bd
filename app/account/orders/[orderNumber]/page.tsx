@@ -15,6 +15,7 @@ import {
   OrderStatusBadge,
   OrderStatusTracker,
 } from "@/components/commerce/order-status-tracker";
+import { ReviewForm } from "@/components/reviews/review-form";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { requireUser } from "@/lib/auth";
@@ -23,6 +24,7 @@ import {
   PAYMENT_STATUS_LABELS,
 } from "@/lib/constants";
 import { getOrderByNumber } from "@/lib/data/orders";
+import { getCustomerReviewsForProducts } from "@/lib/data/reviews";
 import { formatBdt, formatDate } from "@/lib/format";
 import type { ShippingAddressSnapshot } from "@/types/domain";
 
@@ -60,6 +62,20 @@ async function OrderContent({ params, searchParams }: OrderPageProps) {
     order.total_bdt ??
     order.subtotal_bdt + order.shipping_bdt + order.gift_wrap_bdt;
   const placed = search.placed === "1";
+  const delivered = order.status === "delivered";
+  const productIds = [
+    ...new Set(
+      items
+        .map((item) => item.product_id)
+        .filter((id): id is string => Boolean(id)),
+    ),
+  ];
+  const existingReviews = delivered
+    ? await getCustomerReviewsForProducts(productIds)
+    : [];
+  const reviewByProduct = new Map(
+    existingReviews.map((review) => [review.product_id, review]),
+  );
 
   return (
     <div className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
@@ -120,47 +136,69 @@ async function OrderContent({ params, searchParams }: OrderPageProps) {
           className="rounded-3xl border border-border bg-card p-5 sm:p-6"
         >
           <h2 className="text-xl leading-tight">Pieces</h2>
+          <p className="mt-1 text-xs leading-5 text-muted-foreground">
+            {delivered
+              ? "Your order is delivered, so every piece below can be reviewed."
+              : "Reviews open once the order is marked delivered."}
+          </p>
           <ul className="mt-4 divide-y divide-border">
             {items.map((item) => (
-              <li key={item.id} className="flex gap-4 py-4 first:pt-0 last:pb-0">
-                <span className="relative block size-20 shrink-0 overflow-hidden rounded-2xl border border-border bg-secondary">
-                  {item.product_image_url ? (
-                    <Image
-                      src={item.product_image_url}
-                      alt=""
-                      fill
-                      sizes="80px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <span className="grid h-full place-items-center text-muted-foreground">
-                      <ImageOff
-                        aria-hidden="true"
-                        className="size-4"
-                        strokeWidth={1.5}
+              <li key={item.id} className="py-4 first:pt-0 last:pb-0">
+                <div className="flex gap-4">
+                  <span className="relative block size-20 shrink-0 overflow-hidden rounded-2xl border border-border bg-secondary">
+                    {item.product_image_url ? (
+                      <Image
+                        src={item.product_image_url}
+                        alt=""
+                        fill
+                        sizes="80px"
+                        className="object-cover"
                       />
-                    </span>
-                  )}
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="font-medium">{item.product_title}</p>
-                  <p className="mt-0.5 text-xs text-muted-foreground">
-                    {formatBdt(item.unit_price_bdt)} × {item.quantity}
+                    ) : (
+                      <span className="grid h-full place-items-center text-muted-foreground">
+                        <ImageOff
+                          aria-hidden="true"
+                          className="size-4"
+                          strokeWidth={1.5}
+                        />
+                      </span>
+                    )}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-medium">{item.product_title}</p>
+                    <p className="mt-0.5 text-xs text-muted-foreground">
+                      {formatBdt(item.unit_price_bdt)} × {item.quantity}
+                    </p>
+                    {item.gift_wrap ? (
+                      <Badge variant="secondary" className="mt-2">
+                        <Gift
+                          aria-hidden="true"
+                          className="size-3"
+                          strokeWidth={1.8}
+                        />
+                        Gift wrapped
+                      </Badge>
+                    ) : null}
+                  </div>
+                  <p className="shrink-0 text-sm font-semibold">
+                    {formatBdt(
+                      item.line_total_bdt ??
+                        item.unit_price_bdt * item.quantity,
+                    )}
                   </p>
-                  {item.gift_wrap ? (
-                    <Badge variant="secondary" className="mt-2">
-                      <Gift
-                        aria-hidden="true"
-                        className="size-3"
-                        strokeWidth={1.8}
-                      />
-                      Gift wrapped
-                    </Badge>
-                  ) : null}
                 </div>
-                <p className="shrink-0 text-sm font-semibold">
-                  {formatBdt(item.line_total_bdt ?? item.unit_price_bdt * item.quantity)}
-                </p>
+
+                {delivered && item.product_id ? (
+                  <div className="mt-4 sm:pl-24">
+                    <ReviewForm
+                      orderItemId={item.id}
+                      productTitle={item.product_title}
+                      existingReview={
+                        reviewByProduct.get(item.product_id) ?? null
+                      }
+                    />
+                  </div>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -11,6 +11,7 @@ import {
   ShieldCheck,
 } from "lucide-react";
 import { ArtisanDirectoryCard } from "@/components/artisan/artisan-directory-card";
+import { CatalogueStats as CatalogueStatsDisplay } from "@/components/home/catalogue-stats";
 import { Faq } from "@/components/home/faq";
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { Testimonials } from "@/components/home/testimonials";
@@ -20,7 +21,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { JOURNEY_STAGES } from "@/lib/constants";
 import { getFeaturedArtisans } from "@/lib/data/artisans";
 import { getCatalogueFacets, getFeaturedProducts } from "@/lib/data/catalogue";
-import { formatNumber } from "@/lib/format";
 
 const promises = [
   {
@@ -262,20 +262,7 @@ async function CatalogueStats() {
     },
   ];
 
-  return (
-    <dl className="grid max-w-lg grid-cols-3 gap-4 py-8">
-      {stats.map((stat) => (
-        <div key={stat.label}>
-          <dt className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-            {stat.label}
-          </dt>
-          <dd className="mt-1 font-display text-3xl leading-none">
-            {formatNumber(stat.value)}
-          </dd>
-        </div>
-      ))}
-    </dl>
-  );
+  return <CatalogueStatsDisplay stats={stats} />;
 }
 
 async function FeaturedPieces() {

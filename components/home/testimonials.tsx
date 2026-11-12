@@ -1,4 +1,7 @@
-import { BadgeCheck, Quote, Star } from "lucide-react";
+ "use client";
+
+import { useEffect, useState } from "react";
+import { ArrowLeft, ArrowRight, BadgeCheck, Quote, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface Testimonial {
@@ -18,6 +21,26 @@ const FEATURED: Testimonial = {
   piece: "Midnight Lotus Jamdani Saree",
 };
 
+const FEATURED_STORIES: readonly Testimonial[] = [
+  FEATURED,
+  {
+    quote:
+      "The embroidery is delicate, but the story card made it feel even more special. I loved being able to see the artisan's district and the different stages of making before giving it as a wedding gift.",
+    name: "Maliha Chowdhury",
+    initials: "MC",
+    location: "Gulshan, Dhaka",
+    piece: "Nakshi Kantha Wedding Panel",
+  },
+  {
+    quote:
+      "It feels like a piece of Bangladesh that belongs in our home. The brass has a beautiful hand-finished texture, and the verification record gave me confidence that I was buying from the right source.",
+    name: "Tanvir Rahman",
+    initials: "TR",
+    location: "Uttara, Dhaka",
+    piece: "Hand-hammered Brass Bowl",
+  },
+];
+
 const NOTES: readonly Testimonial[] = [
   {
     quote:
@@ -34,6 +57,22 @@ const NOTES: readonly Testimonial[] = [
     initials: "SA",
     location: "Zindabazar, Sylhet",
     piece: "Shital Pati Cushion Cover",
+  },
+  {
+    quote:
+      "The parcel was thoughtful from the first layer to the last. The pottery has tiny variations that make it feel alive, not mass-produced.",
+    name: "Rafiq Hasan",
+    initials: "RH",
+    location: "Khulna Sadar, Khulna",
+    piece: "Dhamrai Terracotta Vase",
+  },
+  {
+    quote:
+      "I found a gift with meaning instead of something generic. The maker profile and provenance trail made the purchase feel personal.",
+    name: "Samia Karim",
+    initials: "SK",
+    location: "Nasirabad, Chattogram",
+    piece: "Jamdani Table Runner",
   },
 ];
 
@@ -61,6 +100,34 @@ function Stars({ tone = "dark" }: { tone?: "dark" | "light" }) {
 }
 
 export function Testimonials() {
+  const [featuredIndex, setFeaturedIndex] = useState(0);
+  const [notesOffset, setNotesOffset] = useState(0);
+  const featured = FEATURED_STORIES[featuredIndex];
+  const visibleNotes = [
+    NOTES[notesOffset],
+    NOTES[(notesOffset + 1) % NOTES.length],
+  ];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setFeaturedIndex((current) => (current + 1) % FEATURED_STORIES.length);
+      setNotesOffset((current) => (current + 1) % NOTES.length);
+    }, 5_000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
+  const previousFeatured = () => {
+    setFeaturedIndex(
+      (current) =>
+        (current - 1 + FEATURED_STORIES.length) % FEATURED_STORIES.length,
+    );
+  };
+
+  const nextFeatured = () => {
+    setFeaturedIndex((current) => (current + 1) % FEATURED_STORIES.length);
+  };
+
   return (
     <section
       id="testimonials"
@@ -85,8 +152,11 @@ export function Testimonials() {
         </div>
       </div>
 
-      <div className="mt-8 grid gap-4 lg:grid-cols-[1.08fr_0.92fr]">
-        <figure className="relative flex min-w-0 flex-col justify-between overflow-hidden rounded-[2rem] bg-accent px-7 py-8 text-accent-foreground sm:px-10 sm:py-10">
+      <div className="mt-8 grid h-[980px] min-h-0 gap-4 overflow-hidden sm:h-[760px] lg:h-[520px] lg:grid-cols-[1.08fr_0.92fr]">
+        <figure
+          key={featured.name}
+          className="relative flex min-w-0 flex-col justify-between overflow-hidden rounded-[2rem] bg-accent px-7 py-8 text-accent-foreground animate-[testimonial-slide-in_550ms_cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none sm:px-10 sm:py-10"
+        >
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-[radial-gradient(circle,rgba(246,239,228,0.18),transparent_66%)]"
@@ -100,18 +170,18 @@ export function Testimonials() {
           <div className="relative">
             <Stars tone="light" />
             <blockquote className="mt-6 text-balance font-display text-[1.45rem] leading-[1.45] sm:text-[1.7rem] sm:leading-[1.4]">
-              “{FEATURED.quote}”
+              “{featured.quote}”
             </blockquote>
           </div>
 
           <figcaption className="relative mt-8 flex items-center gap-4 border-t border-accent-foreground/15 pt-6">
             <span className="grid size-12 shrink-0 place-items-center rounded-full border border-accent-foreground/25 bg-accent-foreground/10 font-display text-lg">
-              {FEATURED.initials}
+              {featured.initials}
             </span>
             <div className="min-w-0">
-              <p className="text-sm font-semibold">{FEATURED.name}</p>
+              <p className="text-sm font-semibold">{featured.name}</p>
               <p className="mt-0.5 text-xs leading-5 text-accent-foreground/65">
-                {FEATURED.location} · {FEATURED.piece}
+                {featured.location} · {featured.piece}
               </p>
             </div>
             <span className="ml-auto hidden shrink-0 items-center gap-1.5 rounded-full border border-accent-foreground/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-foreground/70 sm:inline-flex">
@@ -123,10 +193,47 @@ export function Testimonials() {
               Verified
             </span>
           </figcaption>
+          <div className="relative mt-6 flex items-center justify-between border-t border-accent-foreground/15 pt-4">
+            <div className="flex items-center gap-1.5" aria-label="Featured testimonial">
+              {FEATURED_STORIES.map((story, index) => (
+                <button
+                  key={story.name}
+                  type="button"
+                  aria-label={`Show testimonial ${index + 1}`}
+                  aria-current={index === featuredIndex ? "true" : undefined}
+                  onClick={() => setFeaturedIndex(index)}
+                  className={cn(
+                    "h-1.5 rounded-full transition-all",
+                    index === featuredIndex
+                      ? "w-7 bg-accent-foreground"
+                      : "w-1.5 bg-accent-foreground/35 hover:bg-accent-foreground/60",
+                  )}
+                />
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={previousFeatured}
+                aria-label="Previous testimonial"
+                className="grid size-8 place-items-center rounded-full border border-accent-foreground/20 text-accent-foreground/75 transition-colors hover:bg-accent-foreground/10 hover:text-accent-foreground"
+              >
+                <ArrowLeft aria-hidden="true" className="size-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={nextFeatured}
+                aria-label="Next testimonial"
+                className="grid size-8 place-items-center rounded-full border border-accent-foreground/20 text-accent-foreground/75 transition-colors hover:bg-accent-foreground/10 hover:text-accent-foreground"
+              >
+                <ArrowRight aria-hidden="true" className="size-3.5" />
+              </button>
+            </div>
+          </div>
         </figure>
 
-        <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-1">
-          {NOTES.map((note) => (
+        <div className="grid min-h-0 min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-1">
+          {visibleNotes.map((note) => (
             <figure
               key={note.name}
               className="flex h-full min-w-0 flex-col justify-between rounded-[2rem] border border-border bg-card p-6 transition-colors hover:border-primary/40"

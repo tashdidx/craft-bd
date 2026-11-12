@@ -11,6 +11,7 @@ import {
   Languages,
   MapPin,
   Package,
+  Scissors,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
@@ -265,6 +266,27 @@ async function ArtisanContent({ params }: ArtisanPageProps) {
                 </dd>
               </div>
             </dl>
+          </div>
+
+          <div className="rounded-3xl border border-border bg-card p-6">
+            <Scissors
+              aria-hidden="true"
+              className="size-5 text-primary"
+              strokeWidth={1.7}
+            />
+            <h2 className="mt-3 text-xl leading-tight">
+              Commission a custom piece.
+            </h2>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
+              Send {artisan.display_name} a brief for a bespoke piece. The studio
+              replies with a price and timeline before any work begins.
+            </p>
+            <Button asChild className="mt-4 w-full">
+              <Link href={`/custom-orders/new?artisan=${artisan.slug}`}>
+                Start a request
+                <ArrowRight aria-hidden="true" className="size-4" />
+              </Link>
+            </Button>
           </div>
 
           <div className="rounded-3xl bg-accent p-6 text-accent-foreground">

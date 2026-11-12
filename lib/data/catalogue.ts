@@ -42,7 +42,7 @@ const PRODUCT_DETAIL_COLUMNS = `
   craft_stories ( * ),
   craft_journeys ( * ),
   certificates ( * ),
-  reviews ( rating )
+  reviews ( id, rating, title, comment, created_at, is_verified_purchase )
 `;
 
 export interface RawCardRow {
@@ -74,7 +74,17 @@ interface RawDetailRow extends Tables<"products"> {
   craft_stories: Tables<"craft_stories"> | Tables<"craft_stories">[] | null;
   craft_journeys: Tables<"craft_journeys">[];
   certificates: Tables<"certificates"> | Tables<"certificates">[] | null;
-  reviews: Array<Pick<Tables<"reviews">, "rating">>;
+  reviews: Array<
+    Pick<
+      Tables<"reviews">,
+      | "id"
+      | "rating"
+      | "title"
+      | "comment"
+      | "created_at"
+      | "is_verified_purchase"
+    >
+  >;
 }
 
 function firstOrNull<T>(value: T | T[] | null | undefined): T | null {
@@ -400,6 +410,19 @@ export async function getProductDetail(
     certificate: firstOrNull(row.certificates),
     ratingAverage: averageRating(ratings),
     reviewCount: ratings.length,
+    reviews: [...row.reviews]
+      .sort(
+        (a, b) =>
+          new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+      )
+      .map((review) => ({
+        id: review.id,
+        rating: review.rating,
+        title: review.title,
+        comment: review.comment,
+        createdAt: review.created_at,
+        isVerifiedPurchase: review.is_verified_purchase,
+      })),
   };
 }
 

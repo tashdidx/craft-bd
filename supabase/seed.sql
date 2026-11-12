@@ -1481,6 +1481,20 @@ values
     null,
     false,
     timestamptz '2026-11-02 21:10:00+06'
+  ),
+  (
+    'd1000000-0000-4000-8000-000000000005',
+    'CBD-2026-1005',
+    '33333333-3333-4333-8333-333333333301',
+    'delivered',
+    'paid',
+    6800.00,
+    150.00,
+    0.00,
+    '{"recipient_name":"Nusrat Jahan","phone":"+8801812000001","address_line1":"House 42, Road 7, Dhanmondi","address_line2":"Flat 4B","city":"Dhaka","district":"Dhaka","division":"dhaka","postal_code":"1205"}'::jsonb,
+    null,
+    false,
+    timestamptz '2026-10-20 14:05:00+06'
   )
 on conflict (id) do nothing;
 
@@ -1548,6 +1562,17 @@ values
     'Mango Wood Serving Board',
     '/crafts/woodcraft.svg',
     1750.00,
+    1,
+    false
+  ),
+  (
+    'e1000000-0000-4000-8000-000000000006',
+    'd1000000-0000-4000-8000-000000000005',
+    'b1000000-0000-4000-8000-000000000009',
+    'a1000000-0000-4000-8000-000000000005',
+    'Dhamrai Brass Kalash',
+    '/crafts/brass-ware.svg',
+    6800.00,
     1,
     false
   )

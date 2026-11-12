@@ -81,6 +81,17 @@ export interface ProductDetailData {
   certificate: Certificate | null;
   ratingAverage: number | null;
   reviewCount: number;
+  reviews: ProductReview[];
+}
+
+/** A published review as it appears on a product page. */
+export interface ProductReview {
+  id: string;
+  rating: number;
+  title: string | null;
+  comment: string;
+  createdAt: string;
+  isVerifiedPurchase: boolean;
 }
 
 /** Public artisan card projection used by the directory and home page. */
@@ -197,6 +208,30 @@ export interface OrderListItem {
 export interface OrderDetailData {
   order: Order;
   items: OrderItem[];
+}
+
+/** The studio snapshot shown with a bespoke request. */
+export interface CustomOrderArtisanSummary {
+  id: string;
+  slug: string;
+  displayName: string;
+  workshopName: string | null;
+  craftSpecialization: string;
+  district: string;
+  region: BdDivision;
+  avatarUrl: string | null;
+}
+
+/** A bespoke request as it appears in the customer's request list. */
+export interface CustomOrderListItem {
+  order: CustomOrder;
+  artisan: CustomOrderArtisanSummary | null;
+  category: Pick<Category, "id" | "name" | "slug"> | null;
+}
+
+/** Everything the custom-order detail route renders in one read. */
+export interface CustomOrderDetailData extends CustomOrderListItem {
+  events: CustomOrderEvent[];
 }
 
 /** Prefill for the checkout shipping form. */

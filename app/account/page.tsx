@@ -8,6 +8,7 @@ import {
   LogOut,
   MailCheck,
   Package,
+  Scissors,
   ShieldCheck,
   ShoppingBag,
   type LucideIcon,
@@ -21,6 +22,7 @@ import { signOutAction } from "@/lib/actions/auth";
 import { displayNameFor, requireUser } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/constants";
 import { getCartCount } from "@/lib/data/cart";
+import { getCustomOrderCount } from "@/lib/data/custom-orders";
 import { getOrderCount } from "@/lib/data/orders";
 import { getWishlistCount } from "@/lib/data/wishlist";
 import { formatDate } from "@/lib/format";
@@ -46,11 +48,13 @@ async function AccountContent() {
   const firstName = name.split(/\s+/)[0] ?? name;
   const role = profile?.role ?? "customer";
   const memberSince = profile?.created_at ?? user.created_at;
-  const [orderCount, wishlistCount, cartCount] = await Promise.all([
-    getOrderCount(),
-    getWishlistCount(),
-    getCartCount(),
-  ]);
+  const [orderCount, wishlistCount, cartCount, customOrderCount] =
+    await Promise.all([
+      getOrderCount(),
+      getWishlistCount(),
+      getCartCount(),
+      getCustomOrderCount(),
+    ]);
 
   return (
     <div className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-6 sm:py-16">
@@ -173,6 +177,12 @@ async function AccountContent() {
                 label="Orders"
                 count={orderCount}
                 icon={Package}
+              />
+              <AccountLink
+                href="/custom-orders"
+                label="Custom orders"
+                count={customOrderCount}
+                icon={Scissors}
               />
               <AccountLink
                 href="/account/wishlist"

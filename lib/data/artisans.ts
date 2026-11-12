@@ -228,6 +228,13 @@ export async function getFeaturedArtisans(
   return entries.slice(0, limit);
 }
 
+/** Approved studios offered as the studio picker on the commission form. */
+export async function getApprovedArtisanOptions(): Promise<
+  ArtisanDirectoryEntry[]
+> {
+  return loadApprovedArtisans();
+}
+
 export async function getRelatedArtisans(
   current: {
     slug: string;

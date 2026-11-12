@@ -17,6 +17,12 @@ const navigation = [
   { href: "/artisans", label: "Artisans", primary: true, compact: false },
   { href: "/gifts", label: "Gifts", primary: true, compact: true },
   { href: "/verify", label: "Verify", primary: true, compact: true },
+  {
+    href: "/custom-orders",
+    label: "Custom orders",
+    primary: false,
+    compact: false,
+  },
   { href: "/#craft-traditions", label: "Craft traditions", primary: false, compact: false },
   { href: "/#our-promise", label: "Our promise", primary: false, compact: false },
 ] as const;

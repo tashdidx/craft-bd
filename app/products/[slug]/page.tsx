@@ -23,6 +23,7 @@ import { CertificateCard } from "@/components/product/certificate-card";
 import { ProductDetailSkeleton } from "@/components/product/product-detail-skeleton";
 import { ProductGallery } from "@/components/product/product-gallery";
 import { ProductJourney } from "@/components/product/product-journey";
+import { ProductReviews } from "@/components/reviews/product-reviews";
 import { StarRating } from "@/components/star-rating";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -145,11 +146,16 @@ async function ProductDetail({ params }: ProductPageProps) {
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <StarRating
-              value={detail.ratingAverage}
-              count={detail.reviewCount}
-              size="md"
-            />
+            <a
+              href="#reviews"
+              className="rounded-full underline-offset-4 transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              <StarRating
+                value={detail.ratingAverage}
+                count={detail.reviewCount}
+                size="md"
+              />
+            </a>
             {detail.reviewCount > 0 ? (
               <span className="text-xs text-muted-foreground">
                 Verified customer ratings only
@@ -345,6 +351,13 @@ async function ProductDetail({ params }: ProductPageProps) {
           {certificate ? <CertificateCard certificate={certificate} /> : null}
         </div>
       </section>
+
+      <ProductReviews
+        reviews={detail.reviews}
+        ratingAverage={detail.ratingAverage}
+        reviewCount={detail.reviewCount}
+        productTitle={product.title}
+      />
 
       {related.length > 0 ? (
         <section className="mt-16 border-t border-border pt-12">
