@@ -245,3 +245,108 @@ export interface CheckoutDefaults {
   division: BdDivision;
   postalCode: string;
 }
+
+// -----------------------------------------------------------------------------
+// Back office projections
+// -----------------------------------------------------------------------------
+
+export interface AdminCustomer {
+  id: string;
+  fullName: string;
+  email: string | null;
+  phone: string | null;
+}
+
+export interface AdminOrderListItem {
+  order: Order;
+  customer: AdminCustomer | null;
+  itemCount: number;
+  itemTitles: string[];
+}
+
+export interface AdminOrderDetailData {
+  order: Order;
+  customer: AdminCustomer | null;
+  items: OrderItem[];
+}
+
+export interface AdminCustomOrderListItem {
+  order: CustomOrder;
+  customer: AdminCustomer | null;
+  artisan: CustomOrderArtisanSummary | null;
+  category: Pick<Category, "id" | "name" | "slug"> | null;
+  eventCount: number;
+}
+
+export interface AdminCustomOrderDetailData extends AdminCustomOrderListItem {
+  events: CustomOrderEvent[];
+}
+
+export interface AdminReviewListItem {
+  review: Review;
+  product: Pick<Product, "id" | "title" | "slug"> | null;
+  customer: AdminCustomer | null;
+}
+
+export interface AdminProductListItem {
+  product: Product;
+  category: Pick<Category, "id" | "name" | "slug"> | null;
+  artisan: Pick<Artisan, "id" | "display_name" | "slug"> | null;
+  primaryImage: Pick<ProductImage, "url" | "alt_text"> | null;
+}
+
+export interface AdminArtisanListItem {
+  artisan: Artisan;
+  primaryCategory: Pick<Category, "id" | "name" | "slug"> | null;
+  productCount: number;
+}
+
+export interface AdminActivityListItem {
+  action: AdminAction;
+  admin: AdminCustomer | null;
+}
+
+export interface AdminOverview {
+  counts: {
+    orders: {
+      total: number;
+      pending: number;
+      processing: number;
+      shipped: number;
+      delivered: number;
+      cancelled: number;
+      awaitingAction: number;
+    };
+    customOrders: {
+      submitted: number;
+      quoted: number;
+      active: number;
+      completed: number;
+      open: number;
+    };
+    reviews: {
+      pending: number;
+      published: number;
+      flagged: number;
+      removed: number;
+      awaitingModeration: number;
+    };
+    products: {
+      published: number;
+      draft: number;
+      archived: number;
+      lowStock: number;
+    };
+    artisans: {
+      pending: number;
+      approved: number;
+      suspended: number;
+    };
+  };
+  queues: {
+    orders: AdminOrderListItem[];
+    customOrders: AdminCustomOrderListItem[];
+    reviews: AdminReviewListItem[];
+  };
+  recentActivity: AdminActivityListItem[];
+}

@@ -347,6 +347,44 @@ async function main() {
   assert(cartAfter.items === 0, "place_order must clear the customer's cart");
   console.log("  ✓ place_order writes snapshots, decrements stock, and clears the cart");
 
+  // Cancelling must return the ordered units exactly once, and the cancelled
+  // state must be terminal so a second restore is impossible.
+  await db.exec(`
+    update public.orders
+    set status = 'cancelled'
+    where id = '${placed.order_id}';
+  `);
+
+  const stockAfterCancel = await scalar<{ stock: number }>(`
+    select stock_quantity::int as stock
+    from public.products
+    where id = '${testProduct}'
+  `);
+
+  assert(
+    stockAfterCancel.stock === stockBefore.stock,
+    "cancelling an order must return its quantities to stock",
+  );
+
+  let reopenError: unknown = null;
+  try {
+    await db.exec(`
+      update public.orders
+      set status = 'processing'
+      where id = '${placed.order_id}';
+    `);
+  } catch (error) {
+    reopenError = error;
+  }
+
+  assert(
+    String((reopenError as Error | null)?.message ?? "").includes(
+      "CRAFT_BD_ORDER_CANCELLED_TERMINAL",
+    ),
+    "a cancelled order must be terminal",
+  );
+  console.log("  ✓ cancellation restocks once and is terminal");
+
   async function expectPlaceOrderError(orderNumber: string, marker: string) {
     let caught: unknown = null;
     try {

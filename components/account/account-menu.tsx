@@ -5,12 +5,13 @@ import {
   LogOut,
   Package,
   Scissors,
+  ShieldCheck,
   ShoppingBag,
   UserRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signOutAction } from "@/lib/actions/auth";
-import { displayNameFor, getCurrentUser } from "@/lib/auth";
+import { displayNameFor, getCurrentUser, isAdminUser } from "@/lib/auth";
 import { ROLE_LABELS } from "@/lib/constants";
 
 export async function AccountMenu() {
@@ -32,6 +33,7 @@ export async function AccountMenu() {
   const firstName = name.split(/\s+/)[0] ?? name;
   const initial = name.charAt(0).toUpperCase();
   const role = current.profile?.role ?? "customer";
+  const admin = isAdminUser(current.user);
 
   return (
     <details className="group relative">
@@ -72,6 +74,20 @@ export async function AccountMenu() {
           <UserRound aria-hidden="true" className="size-4" strokeWidth={1.7} />
           Your account
         </Link>
+
+        {admin ? (
+          <Link
+            href="/admin"
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-primary transition-colors hover:bg-secondary"
+          >
+            <ShieldCheck
+              aria-hidden="true"
+              className="size-4"
+              strokeWidth={1.7}
+            />
+            Admin back office
+          </Link>
+        ) : null}
 
         <Link
           href="/account/orders"

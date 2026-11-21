@@ -1,7 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { connection } from "next/server";
 import type { User } from "@supabase/supabase-js";
 import { createClient } from "@/lib/supabase/server";
@@ -47,6 +47,34 @@ export async function requireUser(nextPath = "/account") {
 
   if (!current) {
     redirect(`/login?next=${encodeURIComponent(nextPath)}`);
+  }
+
+  return current;
+}
+
+/**
+ * Administrator authorization reads the role from the signed JWT
+ * (`app_metadata.role`). `profiles.role` is display data and is never trusted
+ * for access control.
+ */
+export function isAdminUser(user: User) {
+  return user.app_metadata?.role === "admin";
+}
+
+/**
+ * Server-side guard for every admin page and Server Action. Signed-out visitors
+ * are sent to sign in; signed-in non-admins get a 404 so the back office is not
+ * advertised.
+ */
+export async function requireAdmin(nextPath = "/admin") {
+  const current = await getCurrentUser();
+
+  if (!current) {
+    redirect(`/login?next=${encodeURIComponent(nextPath)}`);
+  }
+
+  if (!isAdminUser(current.user)) {
+    notFound();
   }
 
   return current;

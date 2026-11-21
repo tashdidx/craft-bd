@@ -4,7 +4,12 @@ import type { Database } from "./database.types";
 import { getSupabasePublicConfig } from "./config";
 
 function isProtectedPath(pathname: string) {
-  return pathname === "/account" || pathname.startsWith("/account/");
+  return (
+    pathname === "/account" ||
+    pathname.startsWith("/account/") ||
+    pathname === "/admin" ||
+    pathname.startsWith("/admin/")
+  );
 }
 
 function hasAuthCookie(request: NextRequest) {

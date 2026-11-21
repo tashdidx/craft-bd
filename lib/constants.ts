@@ -1,8 +1,10 @@
 import type {
+  ArtisanStatus,
   BdDivision,
   CustomOrderStatus,
   OrderStatus,
   PaymentStatus,
+  ProductStatus,
   ReviewStatus,
   UserRole,
 } from "@/lib/supabase/enums";
@@ -134,6 +136,18 @@ export const REVIEW_STATUS_LABELS: Record<ReviewStatus, string> = {
   published: "Published",
   flagged: "Flagged",
   removed: "Removed",
+};
+
+export const PRODUCT_STATUS_LABELS: Record<ProductStatus, string> = {
+  draft: "Draft",
+  published: "Published",
+  archived: "Archived",
+};
+
+export const ARTISAN_STATUS_LABELS: Record<ArtisanStatus, string> = {
+  pending: "Pending review",
+  approved: "Approved",
+  suspended: "Suspended",
 };
 
 export const OCCASIONS = [

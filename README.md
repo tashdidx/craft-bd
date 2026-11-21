@@ -3,9 +3,39 @@
 A digital marketplace connecting Bangladeshi artisans with customers who care
 about provenance, craft, and cultural memory.
 
-**Current build: Chunk 6 — custom orders and reviews.** Chunks 1 (foundation),
+**Current build: Chunk 7 — administration back office.** Chunks 1 (foundation),
 2 (catalogue), 3 (artisan showcase and accounts), 4 (provenance verification),
-and 5 (commerce and cart flow) are complete. Admin tools arrive in a later chunk.
+5 (commerce and cart flow), and 6 (custom orders and reviews) are complete.
+
+## What is in Chunk 7 — administration back office
+
+- `/admin`, an operations dashboard with live counts and queues for orders,
+  custom orders, review moderation, the catalogue, and artisan studios.
+- `/admin/orders` and `/admin/orders/[orderNumber]` with the full order record,
+  item snapshots, delivery address, customer contact, and two guarded controls:
+  advance the delivery status and settle cash-on-delivery payment. Cancelling a
+  pending or processing order returns every piece to stock exactly once and is
+  terminal at the database level.
+- `/admin/custom-orders` and `/admin/custom-orders/[requestCode]` with the
+  customer brief, budget, studio, and timeline. The studio can send or revise a
+  price and lead time, then move an accepted commission through production,
+  quality check, dispatch, and completion. Every step writes a customer-visible
+  timeline event.
+- `/admin/reviews` for publishing, flagging, removing, or returning reviews to
+  the pending queue. Flag and remove decisions require a written reason, and
+  only published reviews reach product pages.
+- `/admin/products` to adjust price and stock, switch between draft, published,
+  and archived, and choose featured pieces. Publishing fills the required
+  publish date automatically.
+- `/admin/artisans` to approve, suspend, or feature a studio.
+- `/admin/activity`, an audit log of every administrator mutation with the
+  administrator, entity, timestamp, and stored details.
+- Admin access uses the signed JWT `app_metadata.role === "admin"`. Every admin
+  page and Server Action re-checks it with `requireAdmin`; the proxy only adds an
+  optimistic signed-in check for `/admin`. Signed-in non-admins receive a 404.
+  The account menu shows the back-office link only for real administrators.
+- The new `20261113090000_craft_bd_admin_order_restock.sql` migration adds the
+  cancellation restock trigger and blocks reopening a cancelled order.
 
 ## What is in Chunk 6 — custom orders and reviews
 
@@ -281,6 +311,15 @@ Key routes:
 | `/forgot-password` | Request a password reset link |
 | `/reset-password` | Choose a new password from a valid reset session |
 | `/account` | Protected profile, password, and session management |
+| `/admin` | Administrator dashboard with operations queues and recent audit activity |
+| `/admin/orders` | Order queue with status, payment, and customer filters |
+| `/admin/orders/[orderNumber]` | Order record, delivery/payment controls, and cancellation |
+| `/admin/custom-orders` | Bespoke request queue with estimates and production states |
+| `/admin/custom-orders/[requestCode]` | Brief, estimate form, production controls, and timeline |
+| `/admin/reviews` | Review moderation with publish, flag, remove, and restore |
+| `/admin/products` | Catalogue price, stock, status, and featuring controls |
+| `/admin/artisans` | Studio approval, suspension, and featuring controls |
+| `/admin/activity` | Administrator audit log with entity filtering |
 | `/auth/callback` | Handle Supabase email confirmation and recovery links |
 
 ## Demo accounts
@@ -301,6 +340,14 @@ regional references describe real Bangladeshi traditions.
 To test the review form, open Nusrat Jahan's delivered order **`CBD-2026-1005`**:
 its Dhamrai Brass Kalash has no review yet, so the form appears. Her order
 `CBD-2026-1001` shows the "you already reviewed this piece" state instead.
+
+To test the back office, sign in as **`admin@craftbd.test`** and open `/admin`
+from the account menu. The seeded queue includes pending order `CBD-2026-1004`,
+submitted custom request `CUS-2026-0003` (alongside the quoted
+`CUS-2026-0001` and the in-production `CUS-2026-0002`), the flagged review on
+the Monpura Tales Nakshi Kantha Quilt, and one audit entry. Publishing the
+delivered order's new review or replying to a request immediately changes the
+customer-facing pages.
 
 ## Data model
 
