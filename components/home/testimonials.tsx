@@ -102,7 +102,6 @@ function Stars({ tone = "dark" }: { tone?: "dark" | "light" }) {
 export function Testimonials() {
   const [featuredIndex, setFeaturedIndex] = useState(0);
   const [notesOffset, setNotesOffset] = useState(0);
-  const featured = FEATURED_STORIES[featuredIndex];
   const visibleNotes = [
     NOTES[notesOffset],
     NOTES[(notesOffset + 1) % NOTES.length],
@@ -112,7 +111,7 @@ export function Testimonials() {
     const timer = window.setInterval(() => {
       setFeaturedIndex((current) => (current + 1) % FEATURED_STORIES.length);
       setNotesOffset((current) => (current + 1) % NOTES.length);
-    }, 5_000);
+    }, 2_000);
 
     return () => window.clearInterval(timer);
   }, []);
@@ -153,10 +152,7 @@ export function Testimonials() {
       </div>
 
       <div className="mt-8 grid h-[980px] min-h-0 gap-4 overflow-hidden sm:h-[760px] lg:h-[520px] lg:grid-cols-[1.08fr_0.92fr]">
-        <figure
-          key={featured.name}
-          className="relative flex min-w-0 flex-col justify-between overflow-hidden rounded-[2rem] bg-accent px-7 py-8 text-accent-foreground animate-[testimonial-slide-in_550ms_cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none sm:px-10 sm:py-10"
-        >
+        <div className="relative flex min-w-0 flex-col overflow-hidden rounded-[2rem] bg-accent text-accent-foreground">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -top-24 -right-16 size-72 rounded-full bg-[radial-gradient(circle,rgba(246,239,228,0.18),transparent_66%)]"
@@ -167,33 +163,50 @@ export function Testimonials() {
             strokeWidth={1}
           />
 
-          <div className="relative">
-            <Stars tone="light" />
-            <blockquote className="mt-6 text-balance font-display text-[1.45rem] leading-[1.45] sm:text-[1.7rem] sm:leading-[1.4]">
-              “{featured.quote}”
-            </blockquote>
+          <div className="relative min-h-0 flex-1 overflow-hidden">
+            <div
+              aria-live="off"
+              className="flex h-full transition-transform duration-500 ease-in-out motion-reduce:transition-none"
+              style={{ transform: `translateX(-${featuredIndex * 100}%)` }}
+            >
+              {FEATURED_STORIES.map((story, index) => (
+                <figure
+                  key={story.name}
+                  aria-hidden={index !== featuredIndex}
+                  className="flex h-full w-full shrink-0 flex-col justify-between px-7 pt-8 pb-4 sm:px-10 sm:pt-10"
+                >
+                  <div className="relative">
+                    <Stars tone="light" />
+                    <blockquote className="mt-6 text-balance font-display text-[1.45rem] leading-[1.45] sm:text-[1.7rem] sm:leading-[1.4]">
+                      “{story.quote}”
+                    </blockquote>
+                  </div>
+
+                  <figcaption className="mt-8 flex items-center gap-4 border-t border-accent-foreground/15 pt-6">
+                    <span className="grid size-12 shrink-0 place-items-center rounded-full border border-accent-foreground/25 bg-accent-foreground/10 font-display text-lg">
+                      {story.initials}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold">{story.name}</p>
+                      <p className="mt-0.5 text-xs leading-5 text-accent-foreground/65">
+                        {story.location} · {story.piece}
+                      </p>
+                    </div>
+                    <span className="ml-auto hidden shrink-0 items-center gap-1.5 rounded-full border border-accent-foreground/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-foreground/70 sm:inline-flex">
+                      <BadgeCheck
+                        aria-hidden="true"
+                        className="size-3.5"
+                        strokeWidth={1.8}
+                      />
+                      Verified
+                    </span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
           </div>
 
-          <figcaption className="relative mt-8 flex items-center gap-4 border-t border-accent-foreground/15 pt-6">
-            <span className="grid size-12 shrink-0 place-items-center rounded-full border border-accent-foreground/25 bg-accent-foreground/10 font-display text-lg">
-              {featured.initials}
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm font-semibold">{featured.name}</p>
-              <p className="mt-0.5 text-xs leading-5 text-accent-foreground/65">
-                {featured.location} · {featured.piece}
-              </p>
-            </div>
-            <span className="ml-auto hidden shrink-0 items-center gap-1.5 rounded-full border border-accent-foreground/20 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-accent-foreground/70 sm:inline-flex">
-              <BadgeCheck
-                aria-hidden="true"
-                className="size-3.5"
-                strokeWidth={1.8}
-              />
-              Verified
-            </span>
-          </figcaption>
-          <div className="relative mt-6 flex items-center justify-between border-t border-accent-foreground/15 pt-4">
+          <div className="relative mt-6 flex items-center justify-between border-t border-accent-foreground/15 px-7 pt-4 pb-8 sm:px-10 sm:pb-10">
             <div className="flex items-center gap-1.5" aria-label="Featured testimonial">
               {FEATURED_STORIES.map((story, index) => (
                 <button
@@ -230,7 +243,7 @@ export function Testimonials() {
               </button>
             </div>
           </div>
-        </figure>
+        </div>
 
         <div className="grid min-h-0 min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-1">
           {visibleNotes.map((note) => (

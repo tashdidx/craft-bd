@@ -91,7 +91,7 @@ async function ProductDetail({ params }: ProductPageProps) {
       : null;
 
   return (
-    <div className="mx-auto w-full max-w-6xl px-5 pb-20 sm:px-6">
+    <div className="mx-auto w-full max-w-6xl px-5 pt-8 pb-20 sm:px-6">
       <nav
         aria-label="Breadcrumb"
         className="flex flex-wrap items-center gap-2 py-6 text-xs text-muted-foreground"
@@ -112,18 +112,20 @@ async function ProductDetail({ params }: ProductPageProps) {
         </span>
       </nav>
 
-      <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
-        <ProductGallery
-          images={images.map((image) => ({
-            id: image.id,
-            url: image.url,
-            alt_text: image.alt_text,
-          }))}
-          title={product.title}
-          isFeatured={product.is_featured}
-        />
+      <div className="grid gap-x-10 gap-y-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-x-14">
+        <div className="lg:col-start-1 lg:row-start-1">
+          <ProductGallery
+            images={images.map((image) => ({
+              id: image.id,
+              url: image.url,
+              alt_text: image.alt_text,
+            }))}
+            title={product.title}
+            isFeatured={product.is_featured}
+          />
+        </div>
 
-        <div>
+        <div className="lg:col-start-2 lg:row-span-2 lg:row-start-1">
           <div className="flex flex-wrap gap-2">
             {category ? (
               <Badge variant="secondary">{category.name}</Badge>
@@ -199,12 +201,14 @@ async function ProductDetail({ params }: ProductPageProps) {
               </div>
             </div>
           </div>
+        </div>
 
-          <p className="mt-6 text-sm leading-7 text-muted-foreground">
+        <div className="space-y-6 lg:col-start-1 lg:row-start-2">
+          <p className="text-sm leading-7 text-muted-foreground">
             {product.description}
           </p>
 
-          <dl className="mt-7 grid gap-x-6 gap-y-4 border-t border-border pt-6 sm:grid-cols-2">
+          <dl className="grid gap-x-6 gap-y-4 border-t border-border pt-6 sm:grid-cols-2">
             <DetailRow
               icon={Leaf}
               label="Materials"
@@ -227,7 +231,7 @@ async function ProductDetail({ params }: ProductPageProps) {
             />
           </dl>
 
-          <div className="mt-7 flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2">
             <StockPill stock={product.stock_quantity} />
             {product.gift_wrap_available ? (
               <span className="inline-flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 text-xs font-medium text-secondary-foreground">
@@ -244,7 +248,7 @@ async function ProductDetail({ params }: ProductPageProps) {
           {artisan ? (
             <Link
               href={`/artisans/${artisan.slug}`}
-              className="group mt-7 flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
+              className="group flex items-center gap-3 rounded-2xl border border-border bg-card p-4 transition-colors hover:border-primary/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
             >
               {artisan.avatar_url ? (
                 <Image

@@ -24,7 +24,7 @@ export function FeaturedProductsCarousel({
   const slides = [
     ...products,
     ...(products.length > 1
-      ? Array.from({ length: 4 }, (_, index) => products[index % products.length])
+      ? Array.from({ length: 3 }, (_, index) => products[index % products.length])
       : []),
   ];
 
@@ -32,7 +32,7 @@ export function FeaturedProductsCarousel({
     const updateVisibleCount = () => {
       setVisibleCount(
         window.matchMedia("(min-width: 1024px)").matches
-          ? 4
+          ? 3
           : window.matchMedia("(min-width: 640px)").matches
             ? 2
             : 1,
@@ -64,7 +64,9 @@ export function FeaturedProductsCarousel({
     if (isPaused || products.length < 2 || slideStep === 0) return;
 
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => current + 1);
+      setActiveIndex((current) =>
+        current >= products.length ? current : current + 1,
+      );
     }, 2_000);
 
     return () => window.clearInterval(timer);
@@ -166,7 +168,7 @@ export function FeaturedProductsCarousel({
                 aria-label={`${(slideIndex % products.length) + 1} of ${products.length}`}
                 aria-hidden={!isVisible}
                 inert={!isVisible}
-                className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-1.25rem)/2)] lg:basis-[calc((100%-3.75rem)/4)]"
+                className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-1.25rem)/2)] lg:basis-[calc((100%-2.5rem)/3)]"
               >
                 <ProductCard product={product} />
               </div>
