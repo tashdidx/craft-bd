@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ArrowRight } from "lucide-react";
@@ -13,7 +14,6 @@ import { Button } from "@/components/ui/button";
 import { SITE } from "@/lib/constants";
 
 const navigation = [
-  { href: "/products", label: "Catalogue", primary: true, compact: false },
   { href: "/artisans", label: "Artisans", primary: true, compact: false },
   { href: "/gifts", label: "Gifts", primary: true, compact: true },
   { href: "/verify", label: "Verify", primary: true, compact: true },
@@ -23,21 +23,21 @@ const navigation = [
     primary: false,
     compact: false,
   },
-  { href: "/#craft-traditions", label: "Craft traditions", primary: false, compact: false },
-  { href: "/#our-promise", label: "Our promise", primary: false, compact: false },
 ] as const;
 
 export function SiteHeader() {
   return (
     <header className="site-header z-40 px-3 pt-3 pb-2 sm:px-5 sm:pt-4 print:hidden">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 rounded-full border border-border/80 bg-background/80 px-3 py-2.5 shadow-[0_18px_50px_-32px_rgba(43,33,25,0.55)] ring-1 ring-white/60 ring-inset backdrop-blur-xl sm:gap-4 sm:px-5 sm:py-3">
-        <Link href="/" className="flex shrink-0 items-center gap-3">
-          <span
-            aria-hidden="true"
-            className="grid size-10 place-items-center rounded-full bg-primary font-display text-lg text-primary-foreground"
-          >
-            C
-          </span>
+        <Link href="/" className="flex shrink-0 items-center gap-3 ">
+          <Image
+            src="/brand/craft-bd-logo2.jpeg"
+            alt=""
+            width={98}
+            height={98}
+            priority
+            className="size-16 shrink-0 rounded-full object-cover ring-1 ring-border/70 sm:size-12"
+          />
           <span className="hidden sm:block">
             <span className="block font-display text-lg leading-none">
               {SITE.name}

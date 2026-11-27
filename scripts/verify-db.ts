@@ -109,7 +109,7 @@ async function main() {
     categories: 8,
     artisans: 9,
     products: 16,
-    product_images: 32,
+    product_images: 16,
     craft_stories: 16,
     craft_journeys: 96,
     certificates: 16,

@@ -7,12 +7,7 @@ export function ProductDetailSkeleton() {
 
       <div className="mt-6 grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
         <div>
-          <Skeleton className="aspect-square w-full rounded-[2rem]" />
-          <div className="mt-3 grid grid-cols-4 gap-3">
-            {Array.from({ length: 2 }, (_, index) => (
-              <Skeleton key={index} className="aspect-square rounded-2xl" />
-            ))}
-          </div>
+          <Skeleton className="aspect-[11/6] w-full rounded-[2rem]" />
         </div>
 
         <div>

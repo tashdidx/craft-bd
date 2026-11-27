@@ -13,9 +13,9 @@ import {
 import { ArtisanDirectoryCard } from "@/components/artisan/artisan-directory-card";
 import { CatalogueStats as CatalogueStatsDisplay } from "@/components/home/catalogue-stats";
 import { Faq } from "@/components/home/faq";
+import { FeaturedProductsCarousel } from "@/components/home/featured-products-carousel";
 import { HeroCarousel } from "@/components/home/hero-carousel";
 import { Testimonials } from "@/components/home/testimonials";
-import { ProductCard } from "@/components/product-card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { JOURNEY_STAGES } from "@/lib/constants";
@@ -266,37 +266,11 @@ async function CatalogueStats() {
 }
 
 async function FeaturedPieces() {
-  const products = await getFeaturedProducts(4);
+  const products = await getFeaturedProducts(12);
 
   if (products.length === 0) return null;
 
-  return (
-    <section className="mx-auto w-full max-w-6xl px-5 pt-20 sm:px-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-primary">
-            Featured pieces
-          </p>
-          <h2 className="mt-3 max-w-2xl text-3xl leading-tight sm:text-4xl">
-            A first look at the catalogue.
-          </h2>
-        </div>
-        <Link
-          href="/products?sort=newest"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-primary underline-offset-4 hover:underline"
-        >
-          See new arrivals
-          <ArrowRight aria-hidden="true" className="size-4" />
-        </Link>
-      </div>
-
-      <div className="mt-8 grid gap-x-5 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
-      </div>
-    </section>
-  );
+  return <FeaturedProductsCarousel products={products} />;
 }
 
 async function FeaturedMakers() {

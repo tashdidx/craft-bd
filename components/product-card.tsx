@@ -28,7 +28,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         href={`/products/${product.slug}`}
         className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:ring-offset-background"
       >
-        <div className="relative aspect-[4/5] overflow-hidden rounded-3xl border border-border bg-secondary">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-border bg-secondary">
           {product.primaryImage ? (
             <Image
               src={product.primaryImage.url}

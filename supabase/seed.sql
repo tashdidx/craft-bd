@@ -445,7 +445,7 @@ values
     28,
     $bio$Rahima Begum learned jamdani from her mother on a pit loom in Rupganj. She now leads a small workshop of six weavers, specialising in indigo-ground sarees with lotus and fish motifs. Her work has been shown at district handloom exhibitions, and she trains younger women in the supplementary-weft technique.$bio$,
     'https://www.youtube.com/watch?v=jamdani-demo',
-    '/artisans/rahima-begum.svg',
+    '/artisans/rahima-begum.jpeg',
     '/crafts/jamdani.svg',
     array['Bangla', 'English'],
     'approved',
@@ -464,7 +464,7 @@ values
     21,
     $bio$Shafiqul Islam grew up beside the looms of Sonargaon. He designs lighter jamdani stoles and yardage for everyday wear, translating historic motif books into contemporary colourways. He works with natural dyes wherever the material allows.$bio$,
     null,
-    '/artisans/shafiqul-islam.svg',
+    '/artisans/shafiqul-islam.jpeg',
     '/crafts/jamdani-detail.svg',
     array['Bangla'],
     'approved',
@@ -483,7 +483,7 @@ values
     34,
     $bio$Gouranga Chandra Pal is a third-generation potter from Dhamrai. His workshop throws everyday water vessels, ritual pots, and narrative wall panels. He favours unglazed terracotta because it lets the clay breathe, and he fires in a traditional wood-fired kiln shared by several families.$bio$,
     null,
-    '/artisans/gouranga-chandra-pal.svg',
+    '/artisans/gouranga-chandra-pal.jpeg',
     '/crafts/clay-pottery.svg',
     array['Bangla'],
     'approved',
@@ -502,7 +502,7 @@ values
     23,
     $bio$Momena Khatun stitches kantha quilts in the village of Bhabki, Jamalpur. She works with a collective of twelve women who layer old saris and share motif drawings. Her quilts often depict river life, boats, and the birds that return to the Brahmaputra each winter.$bio$,
     'https://www.youtube.com/watch?v=kantha-demo',
-    '/artisans/momena-khatun.svg',
+    '/artisans/momena-khatun.jpeg',
     '/crafts/nakshi-kantha.svg',
     array['Bangla'],
     'approved',
@@ -521,7 +521,7 @@ values
     31,
     $bio$Abdul Karim Miah belongs to a family of Dhamrai metalworkers. He casts brass lamps and ritual vessels using clay moulds, then hammers and chases each piece by hand. He is known for leaving a soft, unlacquered patina that deepens with use.$bio$,
     null,
-    '/artisans/abdul-karim-miah.svg',
+    '/artisans/abdul-karim-miah.jpeg',
     '/crafts/brass-ware.svg',
     array['Bangla'],
     'approved',
@@ -540,7 +540,7 @@ values
     17,
     $bio$Sufia Akter coordinates a women-led jute workshop in Faridpur. The co-op weaves totes, runners, and home textiles from locally retted fibre, paying weavers per piece and funding a shared childcare room. Sufia designs the patterns and handles quality checks herself.$bio$,
     null,
-    '/artisans/sufia-akter.svg',
+    '/artisans/sufia-akter.jpeg',
     '/crafts/jute-crafts.svg',
     array['Bangla', 'English'],
     'approved',
@@ -559,7 +559,7 @@ values
     26,
     $bio$Nirmal Chandra Das learned cane weaving from his father in Sylhet. His workshop makes trays, baskets, and lighting from bamboo and cane harvested in the surrounding hills. He is experimenting with flat-pack lampshades that can be shipped without losing their shape.$bio$,
     null,
-    '/artisans/nirmal-chandra-das.svg',
+    '/artisans/nirmal-chandra-das.jpeg',
     '/crafts/bamboo-cane.svg',
     array['Bangla'],
     'approved',
@@ -578,7 +578,7 @@ values
     19,
     $bio$Jamal Uddin works with mango and teak offcuts from Rajshahi''s orchards and furniture workshops. He makes kitchen boards, jewelry boxes, and small furniture using joinery rather than nails. His jali panels are inspired by the screens of old zamindar houses.$bio$,
     null,
-    '/artisans/jamal-uddin.svg',
+    '/artisans/jamal-uddin.jpeg',
     '/crafts/woodcraft.svg',
     array['Bangla'],
     'approved',
@@ -597,7 +597,7 @@ values
     24,
     $bio$Anwara Begum weaves shital pati in Golapganj, Sylhet, where murta cane grows in the wetland edges. She dyes the splints with indigo and natural greens before weaving, and has begun adapting mat panels into cushion covers for urban customers.$bio$,
     'https://www.youtube.com/watch?v=shital-pati-demo',
-    '/artisans/anwara-begum.svg',
+    '/artisans/anwara-begum.jpeg',
     '/crafts/shital-pati.svg',
     array['Bangla'],
     'approved',
@@ -988,26 +988,15 @@ on conflict (id) do nothing;
 -- -----------------------------------------------------------------------------
 -- Product images
 -- -----------------------------------------------------------------------------
+-- One real product photograph per piece, stored in public/crafts/<slug>.jpeg.
 insert into public.product_images (product_id, url, alt_text, sort_order, is_primary)
 select
   p.id,
-  '/crafts/' || c.slug || '.svg',
+  '/crafts/' || p.slug || '.jpeg',
   p.title || ' — main view',
   0,
   true
 from public.products p
-join public.categories c on c.id = p.category_id
-on conflict do nothing;
-
-insert into public.product_images (product_id, url, alt_text, sort_order, is_primary)
-select
-  p.id,
-  '/crafts/' || c.slug || '-detail.svg',
-  p.title || ' — material detail',
-  1,
-  false
-from public.products p
-join public.categories c on c.id = p.category_id
 on conflict do nothing;
 
 -- -----------------------------------------------------------------------------
@@ -1516,7 +1505,7 @@ values
     'b1000000-0000-4000-8000-000000000001',
     'a1000000-0000-4000-8000-000000000001',
     'Midnight Lotus Jamdani Saree',
-    '/crafts/jamdani.svg',
+    '/crafts/midnight-lotus-jamdani-saree.jpeg',
     18500.00,
     1,
     false
@@ -1527,7 +1516,7 @@ values
     'b1000000-0000-4000-8000-000000000005',
     'a1000000-0000-4000-8000-000000000006',
     'Golden Weave Jute Tote',
-    '/crafts/jute-crafts.svg',
+    '/crafts/golden-weave-jute-tote.jpeg',
     1450.00,
     1,
     false
@@ -1538,7 +1527,7 @@ values
     'b1000000-0000-4000-8000-000000000007',
     'a1000000-0000-4000-8000-000000000004',
     'Monpura Tales Nakshi Kantha Quilt',
-    '/crafts/nakshi-kantha.svg',
+    '/crafts/monpura-tales-nakshi-kantha-quilt.jpeg',
     12500.00,
     1,
     true
@@ -1549,7 +1538,7 @@ values
     'b1000000-0000-4000-8000-000000000009',
     'a1000000-0000-4000-8000-000000000005',
     'Dhamrai Brass Kalash',
-    '/crafts/brass-ware.svg',
+    '/crafts/dhamrai-brass-kalash.jpeg',
     6800.00,
     1,
     false
@@ -1560,7 +1549,7 @@ values
     'b1000000-0000-4000-8000-000000000013',
     'a1000000-0000-4000-8000-000000000008',
     'Mango Wood Serving Board',
-    '/crafts/woodcraft.svg',
+    '/crafts/mango-wood-serving-board.jpeg',
     1750.00,
     1,
     false
@@ -1571,7 +1560,7 @@ values
     'b1000000-0000-4000-8000-000000000009',
     'a1000000-0000-4000-8000-000000000005',
     'Dhamrai Brass Kalash',
-    '/crafts/brass-ware.svg',
+    '/crafts/dhamrai-brass-kalash.jpeg',
     6800.00,
     1,
     false

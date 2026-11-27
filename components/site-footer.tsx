@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { SITE } from "@/lib/constants";
 
@@ -7,9 +8,13 @@ export function SiteFooter() {
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 md:grid-cols-[1.4fr_1fr_1fr]">
         <div>
           <div className="flex items-center gap-3">
-            <span className="grid size-10 place-items-center rounded-full bg-primary font-display text-lg text-primary-foreground">
-              C
-            </span>
+            <Image
+              src="/brand/craft-bd-logo2.jpeg"
+              alt=""
+              width={80}
+              height={80}
+              className="size-10 shrink-0 rounded-full object-cover ring-1 ring-border/70"
+            />
             <div>
               <p className="font-display text-lg leading-none">{SITE.name}</p>
               <p className="mt-1 text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
@@ -115,7 +120,7 @@ export function SiteFooter() {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>{SITE.name} · Dhaka, Bangladesh</p>
           <p>
-            Seed names and reviews are fictional; the craft traditions are real.
+            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
         </div>
       </div>

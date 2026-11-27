@@ -28,7 +28,7 @@ export function ProductGallery({
 
   if (!active) {
     return (
-      <div className="grid aspect-square place-items-center rounded-[2rem] border border-border bg-secondary text-muted-foreground">
+      <div className="grid aspect-[11/6] place-items-center rounded-[2rem] border border-border bg-secondary text-muted-foreground">
         <div className="grid place-items-center gap-2">
           <ImageOff aria-hidden="true" className="size-10" strokeWidth={1.3} />
           <span className="text-sm">Photographs coming soon</span>
@@ -39,7 +39,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-square overflow-hidden rounded-[2rem] border border-border bg-secondary">
+      <div className="relative aspect-[11/6] overflow-hidden rounded-[2rem] border border-border bg-secondary">
         <Image
           src={active.url}
           alt={active.alt_text}

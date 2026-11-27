@@ -204,8 +204,10 @@ about provenance, craft, and cultural memory.
 - Demo seed data for 8 craft traditions, 9 artisan studios, 16 products, 16
   craft stories, 96 journey stages, 16 certificates, orders, reviews, and
   three custom orders at different lifecycle stages.
-- Local SVG artwork for every seeded category and artisan, so the catalogue
-  works without third-party image services.
+- Local SVG artwork for every seeded category, real product photography in
+  `public/crafts/<slug>.jpeg`, and artisan portraits in
+  `public/artisans/<slug>.jpeg`, so the site works without third-party image
+  services.
 - Typed Supabase browser/server/admin clients and a Next.js Proxy session
   refresher.
 
