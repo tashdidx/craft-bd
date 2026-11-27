@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { cacheLife } from "next/cache";
 import { SITE } from "@/lib/constants";
 
 export function SiteFooter() {
@@ -119,11 +120,20 @@ export function SiteFooter() {
       <div className="border-t border-border">
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-2 px-6 py-6 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
           <p>{SITE.name} · Dhaka, Bangladesh</p>
-          <p>
-            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
-          </p>
+          <CopyrightNotice />
         </div>
       </div>
     </footer>
+  );
+}
+
+async function CopyrightNotice() {
+  "use cache";
+  cacheLife("days");
+
+  return (
+    <p>
+      © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+    </p>
   );
 }
